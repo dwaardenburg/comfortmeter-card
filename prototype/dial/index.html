@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- Throwaway prototype for #2. Not part of the card. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Comfortmeter dial prototype</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Roboto, "Segoe UI", Noto, sans-serif;
+        padding-bottom: 80px;
+      }
+      .theme {
+        padding: 16px;
+        background: var(--primary-background-color);
+        color: var(--primary-text-color);
+      }
+      .theme h2 {
+        margin: 0 0 12px;
+        font: 500 14px monospace;
+        color: var(--secondary-text-color);
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .cell {
+        width: 260px;
+      }
+      .cell p {
+        font: 11px monospace;
+        color: var(--secondary-text-color);
+        margin: 6px 2px 0;
+      }
+      #light {
+        --primary-color: #009ac7;
+        --primary-background-color: #fafafa;
+        --card-background-color: #ffffff;
+        --primary-text-color: #141414;
+        --secondary-text-color: #5e5e5e;
+        --disabled-color: #bdbdbd;
+        --divider-color: rgba(0, 0, 0, 0.12);
+      }
+      #dark {
+        --primary-color: #009ac7;
+        --primary-background-color: #111111;
+        --card-background-color: #1c1c1c;
+        --primary-text-color: #e1e1e1;
+        --secondary-text-color: #9b9b9b;
+        --disabled-color: #6f6f6f;
+        --divider-color: rgba(225, 225, 225, 0.12);
+      }
+      .theme {
+        --state-climate-heat-color: #ff8100;
+        --state-climate-cool-color: #2b9af9;
+        --state-climate-dry-color: #efbd07;
+        --indigo-color: #3f51b5;
+        --success-color: #43a047;
+        --warning-color: #ffa600;
+      }
+      #state {
+        margin: 0;
+        padding: 16px;
+        font: 11px/1.4 monospace;
+        background: #f0f0f0;
+        white-space: pre;
+        overflow-x: auto;
+      }
+      #switcher {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #ff2d87;
+        color: #fff;
+        font: 600 13px monospace;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        z-index: 10;
+      }
+      #switcher button {
+        all: unset;
+        cursor: pointer;
+        padding: 0 6px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="theme" id="light">
+      <h2>light</h2>
+      <div class="row"></div>
+    </section>
+    <section class="theme" id="dark">
+      <h2>dark</h2>
+      <div class="row"></div>
+    </section>
+    <pre id="state"></pre>
+    <div id="switcher">
+      <button id="prev" aria-label="Previous variant">←</button>
+      <span id="label"></span>
+      <button id="next" aria-label="Next variant">→</button>
+    </div>
+    <script type="module" src="dist/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dial-prototype",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["prototype/dial/serve.mjs"],
+      "port": 5180
+    }
+  ]
+}

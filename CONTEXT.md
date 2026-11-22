@@ -11,10 +11,15 @@ so that where the needles cross says how comfortable the air is. One word, like
 thermometer and hygrometer.
 _Avoid_: comfort meter, Comfort-Meter, comfort gauge, climate meter, thermo-hygrometer
 
+**Dial**:
+The face of the comfortmeter: a pointed arch whose two sides are the scales, with the
+needles' pivots at its base corners.
+_Avoid_: gauge, face plate
+
 **Scale**:
-One half of the dial's arc, carrying the ticks for one reading: the temperature scale on
-the left, the humidity scale on the right.
-_Avoid_: gauge, axis
+One of the dial's two arcs, centred on its needle's pivot, along which that needle's tip
+reads: the humidity scale on the left, the temperature scale on the right.
+_Avoid_: track, axis
 
 **Band**:
 A range of one scale's readings with a verdict: too cold, comfortable or too warm on the
