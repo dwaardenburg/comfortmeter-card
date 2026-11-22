@@ -128,6 +128,7 @@ describe("scalesFor", () => {
 
 describe("stubConfig", () => {
   const sensor = (device_class?: string) => ({
+    entity_id: "sensor.any",
     state: "1",
     attributes: device_class ? { device_class } : {},
   });

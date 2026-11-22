@@ -199,14 +199,16 @@ const scenarios: Scenario[] = [
 
 function hassFor(scenario: Scenario): HomeAssistant {
   return {
-    formatEntityState: (entity) =>
-      `${entity.state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
+    formatEntityState: (entity, state = entity.state) =>
+      `${state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
     states: {
       "sensor.room_temperature": {
+        entity_id: "sensor.room_temperature",
         state: scenario.temperature,
         attributes: { unit_of_measurement: scenario.unit ?? "°C" },
       },
       "sensor.room_humidity": {
+        entity_id: "sensor.room_humidity",
         state: scenario.humidity,
         attributes: { unit_of_measurement: "%" },
       },

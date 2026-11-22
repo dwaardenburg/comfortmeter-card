@@ -160,11 +160,31 @@ Daan agreed.
 they follow the sensor's display precision, the user's locale and Home Assistant's own
 spacing before units.
 
+**At most one decimal.** A comfortmeter needs no more, so a reading shows at most one
+decimal whatever the sensor's precision; a sensor set to fewer keeps its setting
+([#13](https://github.com/dwaardenburg/comfortmeter-card/issues/13)). The card rounds the
+state and hands it to `formatEntityState`. Home Assistant pads a state to the display
+precision it finds in the entity registry under the entity's id, so for a sensor set to
+more than one decimal the card passes the rounded state under an id the registry doesn't
+know, in the same domain. That loses only a unit the integration translates, which
+temperature and humidity sensors don't use.
+
 **Scale options are checked against the sensor's unit.** The temperature defaults depend
 on the sensor's unit, which the card only learns from `hass`. The card editor therefore
 checks only the keys that are set. If the defaults then fill in a scale out of order, such
 as `comfortable_min: 26` against the default 24 °C maximum, the card shows the error,
 naming the option, in place of the dial.
+
+**The visual editor is a form Home Assistant draws.** The card returns a schema from the
+static `getConfigForm()`
+([contributor docs](https://contributors.home-assistant.io/frontend/custom-ui/card-editor/)),
+so Home Assistant renders `ha-form` with the built-in cards' controls and the card never
+loads or imports them itself
+([#11](https://github.com/dwaardenburg/comfortmeter-card/issues/11)). Each scale's options
+sit in their own expandable section, closed, since most people keep the defaults. Its
+`assertConfig` runs `parseConfig`, so a configuration the card rejects turns the form off
+and Home Assistant shows the error, naming the option. Errors that need the sensor's unit
+still show in the card's preview, as above.
 
 **The dial keeps the thermostat's size.** On a wide card the readings and the dial stay at
 most 344px wide, centred, as the thermostat card's dial does. In the sections view the card

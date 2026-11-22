@@ -15,9 +15,10 @@ import {
   type Needle,
   type Scales,
 } from "./dial";
+import { configForm } from "./editor";
 import type { HassEntity, HomeAssistant } from "./home-assistant";
 import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
-import { readingOf } from "./reading";
+import { readingOf, shownReading } from "./reading";
 
 /**
  * The comfortmeter card: a temperature and a humidity needle on one dial, crossing over
@@ -41,6 +42,11 @@ export class ComfortmeterCard extends LitElement {
   /** The sections view's size: half a section wide, as tall as the dial needs. */
   public getGridOptions() {
     return { columns: 6, rows: "auto", min_columns: 4 };
+  }
+
+  /** The visual editor, drawn by Home Assistant from a form schema. */
+  public static getConfigForm() {
+    return configForm();
   }
 
   /** The card picker's first configuration: the first temperature and humidity sensors. */
@@ -81,10 +87,9 @@ export class ComfortmeterCard extends LitElement {
           )
         : undefined;
     const level = zone ? comfortLevel(zone) : undefined;
+    const hass = this.hass;
     const shown = (entity: HassEntity | undefined) =>
-      entity && readingOf(entity) !== undefined
-        ? this.hass?.formatEntityState(entity)
-        : "—";
+      shownReading(hass, entity);
     return html`
       <ha-card>
         ${

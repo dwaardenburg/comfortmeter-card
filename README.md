@@ -25,6 +25,9 @@ Or by hand: download `comfortmeter-card.js` from the
 
 ## Use
 
+Add the card from the dashboard's card picker and set it up in the visual editor, or in
+YAML:
+
 ```yaml
 type: custom:comfortmeter-card
 temperature_entity: sensor.living_room_temperature

@@ -16,14 +16,16 @@ function hassWith(
   unit = "°C"
 ): HomeAssistant {
   return {
-    formatEntityState: (entity) =>
-      `${entity.state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
+    formatEntityState: (entity, state = entity.state) =>
+      `${state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
     states: {
       "sensor.room_temperature": {
+        entity_id: "sensor.room_temperature",
         state: temperature,
         attributes: { unit_of_measurement: unit },
       },
       "sensor.room_humidity": {
+        entity_id: "sensor.room_humidity",
         state: humidity,
         attributes: { unit_of_measurement: "%" },
       },
@@ -97,6 +99,13 @@ describe("the card", () => {
     ).toBe("21.5 °C");
     expect(root.querySelector(".reading.humidity")?.textContent?.trim()).toBe(
       "48 %"
+    );
+  });
+
+  it("shows a reading with at most one decimal", async () => {
+    const root = await mount(hassWith("21.5", "55.54"));
+    expect(root.querySelector(".reading.humidity")?.textContent?.trim()).toBe(
+      "55.5 %"
     );
   });
 

@@ -13,11 +13,14 @@ changes are listed under **Breaking changes**.
   light and dark themes.
 - The crossing takes a colour from blue through green to red for how warm the air feels,
   and the words under the dial say how comfortable it is, such as "Too warm and humid".
-- The room name on top and both readings beside the dial, with their icons.
+- The room name on top and both readings beside the dial, with their icons. A reading
+  shows at most one decimal.
 - `temperature` and `humidity` options set each scale's range and comfortable band.
   Temperatures follow the sensor's unit, °C or °F.
 - `show_comfort_limits` numbers the comfort limits at the scales.
 - A sensor that is unavailable shows "—", and its needle is left out.
 - The card sizes itself in the sections view and suggests your first temperature and
   humidity sensors in the card picker.
+- A visual editor: pick the sensors from those with the right device class, set the name,
+  and open each scale's options when you want to change them.
 - Requires Home Assistant 2026.11 or later.
