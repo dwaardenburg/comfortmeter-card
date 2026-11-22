@@ -5,7 +5,8 @@
 //    stopping short of the arcs; a green comfort zone; the crossing dot in the band's
 //    colour; a small white dot on each current value; the room name on one line at the
 //    top with the readings in the corners below it; the verdict centred under the base.
-// A: F with the face coloured the way the crossing dot would be at each spot.
+// A: F with the face coloured the way the crossing dot would be at each spot: a debug
+//    view of the zone colours, not part of the design.
 // G: F with the comfort limits numbered at the arcs (the card's optional show_comfort_limits).
 import { LitElement, css, html, svg } from "lit";
 import { fmt, poly, type FakeHass } from "./geometry";
@@ -255,14 +256,13 @@ class ArchDial extends LitElement {
       stroke: var(--primary-text-color);
       stroke-width: 2;
     }
-    /* The marker: a solid white dot with a thin dark edge. */
+    /* The marker: a solid white dot. */
     .value {
       fill: white;
-      stroke: rgba(0, 0, 0, 0.45);
-      stroke-width: 1;
     }
+    /* A ring in the needles' colour, like the pivots: the crossing reads as a joint. */
     .cross-border {
-      fill: var(--card-background-color);
+      fill: var(--primary-text-color);
     }
     .verdict {
       text-anchor: middle;

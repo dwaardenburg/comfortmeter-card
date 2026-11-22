@@ -169,7 +169,7 @@ const variants = [
   {
     key: "A",
     tag: "variant-a",
-    name: "F with bands washed in the crossing colours",
+    name: "debug: zone colours",
   },
   { key: "F", tag: "variant-f", name: "full arcs, band lines, room name" },
   { key: "G", tag: "variant-g", name: "F with numbered comfort limits" },

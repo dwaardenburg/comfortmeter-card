@@ -105,6 +105,12 @@ was replaced:
   cooler. A shows all nine. At A's soft wash, neighbouring steps are hard to tell apart;
   on the crossing they are clear.
 
+## Round nine
+
+- A is now a debugging view of the zone colours, not a design candidate.
+- Markers lost their edge; the crossing's ring is now in the needles' colour.
+- In light mode the edgeless white markers almost vanish on the pale track.
+
 ## Verdict
 
 _To fill in with Daan._

@@ -36,7 +36,7 @@ low field. Because each needle sweeps a circle around its own pivot, its tip run
 scale and its length stays the same.
 
 **A marker on each reading.** Where each needle meets its scale, a marker shows the
-reading: a solid white dot with a thin dark edge, a little larger than the thermostat's
+reading: a solid white dot without an edge, a little larger than the thermostat's
 current-temperature dot. It is not the thermostat's target handle: there is no target yet.
 
 **Pivots at the arch's base corners.** The temperature needle pivots at the lower left,
@@ -61,7 +61,13 @@ Scale numbers are left out for now.
 
 **Only the comfort zone is drawn.** The comfort zone is a green field
 (`--success-color`), four-sided with straight sides, where the two comfortable bands
-overlap. The other zones are not drawn: the crossing takes its zone's colour.
+overlap. The other zones are not drawn: the crossing takes its zone's colour. The
+crossing is a dot in that colour inside a ring in the needles' colour, so it reads as a
+joint of the needles, like the pivots.
+
+Colouring every zone is a debugging view for now, to see what colour the crossing takes
+anywhere on the dial (variant A in the prototype). It may become an option later; it is
+not one yet.
 
 **Zone colours follow felt temperature.** Each of the nine zones has its own colour on
 one scale from blue through green to red. The temperature band sets the main step, and
