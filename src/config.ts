@@ -12,6 +12,8 @@ export interface ComfortmeterCardConfig {
   /** In the temperature sensor's unit. */
   temperature?: ScaleOptions;
   humidity?: ScaleOptions;
+  /** Number the four comfort limits at the scales. */
+  show_comfort_limits?: boolean;
 }
 
 const ENTITY_ID = /^[a-z_]+\.[a-z0-9_]+$/;
@@ -45,6 +47,12 @@ export function parseConfig(raw: unknown): ComfortmeterCardConfig {
   }
   if (config.name !== undefined && typeof config.name !== "string") {
     throw new Error("name must be text.");
+  }
+  if (
+    config.show_comfort_limits !== undefined &&
+    typeof config.show_comfort_limits !== "boolean"
+  ) {
+    throw new Error("show_comfort_limits must be true or false.");
   }
   for (const scale of ["temperature", "humidity"] as const) {
     const block = config[scale];

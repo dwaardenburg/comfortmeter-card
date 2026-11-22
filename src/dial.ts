@@ -49,6 +49,13 @@ export interface DialLayout {
   /** The comfort zone's four corners, in order round the zone. */
   comfortZone: Point[];
   bandLines: BandLine[];
+  /** The comfort limits' numbers, when they are shown, in the band lines' order. */
+  comfortLimits: ComfortLimit[];
+}
+
+export interface ComfortLimit {
+  value: number;
+  at: Point;
 }
 
 /** The arc's radius: the distance between the pivots. */
@@ -58,6 +65,10 @@ export const BASE_Y = 282;
 export const SCALE_WIDTH = 24;
 /** How far a band line stops short of the scale's inner edge. */
 const BAND_LINE_GAP = 4;
+/** How far a band line stops short of the scale when a comfort limit is numbered there. */
+const COMFORT_LIMIT_GAP = 22;
+/** Where a comfort limit's number sits: on its band line, just inside the scale. */
+const COMFORT_LIMIT_RADIUS = RADIUS - 25;
 const SCALE_DEGREES = 60;
 
 export const TEMPERATURE_PIVOT: Point = [160 - RADIUS / 2, BASE_Y];
@@ -122,7 +133,11 @@ function intersect(a: Point, b: Point, c: Point, d: Point): Point | undefined {
 }
 
 /** Lay out the dial for a pair of readings on a pair of scales. */
-export function layoutDial(readings: Readings, scales: Scales): DialLayout {
+export function layoutDial(
+  readings: Readings,
+  scales: Scales,
+  options: { showComfortLimits?: boolean } = {}
+): DialLayout {
   const temperatureAngle = (x: number) => scaleAngle(x, scales.temperature);
   const humidityAngle = (x: number) => scaleAngle(x, scales.humidity);
 
@@ -170,22 +185,36 @@ export function layoutDial(readings: Readings, scales: Scales): DialLayout {
     corner(temperatureLimits[1], humidityLimits[0]),
   ];
 
-  const lineLength = RADIUS - SCALE_WIDTH / 2 - BAND_LINE_GAP;
-  const bandLines: BandLine[] = [
+  // The four comfort limits, each with where its band line runs from and towards.
+  const limits = [
     ...[
       scales.temperature.comfortable_min,
       scales.temperature.comfortable_max,
-    ].map((limit) => ({
+    ].map((value) => ({
+      value,
       pivot: TEMPERATURE_PIVOT,
-      end: temperaturePoint(temperatureAngle(limit), lineLength),
+      at: (radius: number) => temperaturePoint(temperatureAngle(value), radius),
     })),
     ...[scales.humidity.comfortable_min, scales.humidity.comfortable_max].map(
-      (limit) => ({
+      (value) => ({
+        value,
         pivot: HUMIDITY_PIVOT,
-        end: humidityPoint(humidityAngle(limit), lineLength),
+        at: (radius: number) => humidityPoint(humidityAngle(value), radius),
       })
     ),
   ];
+  // Band lines stop short of the scale, and further short when a number sits there.
+  const lineLength =
+    RADIUS -
+    SCALE_WIDTH / 2 -
+    (options.showComfortLimits ? COMFORT_LIMIT_GAP : BAND_LINE_GAP);
+  const bandLines: BandLine[] = limits.map(({ pivot, at }) => ({
+    pivot,
+    end: at(lineLength),
+  }));
+  const comfortLimits: ComfortLimit[] = options.showComfortLimits
+    ? limits.map(({ value, at }) => ({ value, at: at(COMFORT_LIMIT_RADIUS) }))
+    : [];
 
   return {
     temperatureNeedle,
@@ -193,6 +222,7 @@ export function layoutDial(readings: Readings, scales: Scales): DialLayout {
     crossing,
     comfortZone,
     bandLines,
+    comfortLimits,
   };
 }
 

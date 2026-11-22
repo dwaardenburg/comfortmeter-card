@@ -51,7 +51,9 @@ export class ComfortmeterCard extends LitElement {
       temperature: readingOf(temperature),
       humidity: readingOf(humidity),
     };
-    const dial = layoutDial(readings, scales);
+    const dial = layoutDial(readings, scales, {
+      showComfortLimits: this._config.show_comfort_limits,
+    });
     const zone =
       readings.temperature !== undefined && readings.humidity !== undefined
         ? zoneOf(
@@ -95,6 +97,10 @@ export class ComfortmeterCard extends LitElement {
           ${dial.bandLines.map(
             ({ pivot, end }) =>
               svg`<line class="band-line" x1=${pivot[0]} y1=${pivot[1]} x2=${end[0]} y2=${end[1]} />`
+          )}
+          ${dial.comfortLimits.map(
+            ({ value, at }) =>
+              svg`<text class="comfort-limit" x=${at[0]} y=${at[1]}>${value}</text>`
           )}
           <path class="comfort-zone" d=${polygonPath(dial.comfortZone)} />
           ${needles(dial.temperatureNeedle, dial.humidityNeedle)}
@@ -182,6 +188,12 @@ export class ComfortmeterCard extends LitElement {
       stroke: var(--secondary-text-color);
       stroke-width: 1;
       opacity: 0.3;
+    }
+    .comfort-limit {
+      font-size: 11px;
+      fill: var(--secondary-text-color);
+      text-anchor: middle;
+      dominant-baseline: middle;
     }
     .comfort-zone {
       fill: var(--success-color);

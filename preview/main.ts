@@ -182,6 +182,12 @@ const scenarios: Scenario[] = [
     },
   },
   {
+    label: "show_comfort_limits",
+    temperature: "21.5",
+    humidity: "48",
+    options: { show_comfort_limits: true },
+  },
+  {
     label: "humidity unavailable",
     temperature: "20.4",
     humidity: "unavailable",

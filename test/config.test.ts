@@ -66,6 +66,19 @@ describe("parseConfig", () => {
       })
     ).toThrow("humidity.comfortable_max");
   });
+
+  it("accepts show_comfort_limits", () => {
+    expect(parseConfig({ ...valid, show_comfort_limits: true })).toEqual({
+      ...valid,
+      show_comfort_limits: true,
+    });
+  });
+
+  it("names show_comfort_limits when it is not true or false", () => {
+    expect(() => parseConfig({ ...valid, show_comfort_limits: "yes" })).toThrow(
+      "show_comfort_limits"
+    );
+  });
 });
 
 describe("scalesFor", () => {

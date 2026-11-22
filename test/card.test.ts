@@ -130,4 +130,15 @@ describe("the card", () => {
       "temperature.comfortable_min"
     );
   });
+
+  it("numbers the comfort limits when show_comfort_limits is on", async () => {
+    const off = await mount(hassWith("21.5", "48"));
+    expect(off.querySelectorAll(".comfort-limit")).toHaveLength(0);
+    const on = await mount(hassWith("21.5", "48"), {
+      show_comfort_limits: true,
+    });
+    expect(
+      [...on.querySelectorAll(".comfort-limit")].map((n) => n.textContent)
+    ).toEqual(["19", "24", "40", "60"]);
+  });
 });

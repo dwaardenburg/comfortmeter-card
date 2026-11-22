@@ -199,3 +199,33 @@ describe("layoutDial", () => {
     expect(dial.comfortZone).toHaveLength(4);
   });
 });
+
+describe("comfort limits", () => {
+  const readings = { temperature: 21.5, humidity: 48 };
+
+  it("are left out by default", () => {
+    expect(layoutDial(readings, celsius).comfortLimits).toEqual([]);
+  });
+
+  it("number each comfort limit inside its scale, on its band line", () => {
+    const dial = layoutDial(readings, celsius, { showComfortLimits: true });
+    expect(dial.comfortLimits.map((l) => l.value)).toEqual([19, 24, 40, 60]);
+    dial.comfortLimits.forEach((limit, i) => {
+      const line = dial.bandLines[i];
+      expect(collinear(line.pivot, line.end, limit.at)).toBe(true);
+      expect(distance(line.pivot, limit.at)).toBeGreaterThan(
+        distance(line.pivot, line.end)
+      );
+      expect(distance(line.pivot, limit.at)).toBeLessThan(RADIUS - 12);
+    });
+  });
+
+  it("follow a custom comfortable band", () => {
+    const scales = {
+      ...celsius,
+      temperature: { ...celsius.temperature, comfortable_max: 26.5 },
+    };
+    const dial = layoutDial(readings, scales, { showComfortLimits: true });
+    expect(dial.comfortLimits[1].value).toBe(26.5);
+  });
+});
