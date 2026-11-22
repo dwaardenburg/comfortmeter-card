@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["prototype/dial/serve.mjs"],
       "port": 5180
+    },
+    {
+      "name": "card-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["run", "preview"],
+      "port": 5181
     }
   ]
 }

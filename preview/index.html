@@ -1,0 +1,74 @@
+<!doctype html>
+<!-- The card's preview page, for development only. See preview/main.ts. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Comfortmeter card preview</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Roboto, "Segoe UI", Noto, sans-serif;
+      }
+      .theme {
+        padding: 16px;
+        background: var(--primary-background-color);
+        color: var(--primary-text-color);
+      }
+      .theme h2 {
+        margin: 0 0 12px;
+        font: 500 14px monospace;
+        color: var(--secondary-text-color);
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .cell {
+        width: 260px;
+      }
+      .cell p {
+        font: 11px monospace;
+        color: var(--secondary-text-color);
+        margin: 6px 2px 0;
+      }
+      /* Home Assistant's default theme, light and dark. */
+      #light {
+        --primary-color: #009ac7;
+        --primary-background-color: #fafafa;
+        --card-background-color: #ffffff;
+        --primary-text-color: #141414;
+        --secondary-text-color: #5e5e5e;
+        --disabled-color: #bdbdbd;
+        --divider-color: rgba(0, 0, 0, 0.12);
+      }
+      #dark {
+        --primary-color: #009ac7;
+        --primary-background-color: #111111;
+        --card-background-color: #1c1c1c;
+        --primary-text-color: #e1e1e1;
+        --secondary-text-color: #9b9b9b;
+        --disabled-color: #6f6f6f;
+        --divider-color: rgba(225, 225, 225, 0.12);
+      }
+      .theme {
+        --state-climate-heat-color: #ff8100;
+        --state-climate-cool-color: #2b9af9;
+        --red-color: #f44336;
+        --success-color: #43a047;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="theme" id="light">
+      <h2>light</h2>
+      <div class="row"></div>
+    </section>
+    <section class="theme" id="dark">
+      <h2>dark</h2>
+      <div class="row"></div>
+    </section>
+    <script type="module" src="dist/preview.js"></script>
+    <script type="module" src="dist/comfortmeter-card.js"></script>
+  </body>
+</html>

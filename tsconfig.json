@@ -41,5 +41,5 @@
       }
     ]
   },
-  "include": ["src", "test", "*.config.ts"]
+  "include": ["src", "test", "preview", "*.config.ts"]
 }
