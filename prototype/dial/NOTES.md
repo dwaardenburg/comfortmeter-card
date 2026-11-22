@@ -112,6 +112,11 @@ was replaced:
 - In light mode the edgeless white markers almost vanished on the pale track, so markers
   now take the needles' colour. The crossing's ring went from 2px to 1px.
 
+## Round ten
+
+Needles, pivots, markers and the crossing's ring take the thermostat's current-value
+marker colour: the primary text colour at 50 %, mixed solid against the card.
+
 ## Verdict
 
 _To fill in with Daan._

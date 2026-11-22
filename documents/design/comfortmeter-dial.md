@@ -40,6 +40,11 @@ reading: a solid dot in the needles' colour (dark in light mode, near-white in d
 mode), a little larger than the thermostat's
 current-temperature dot. It is not the thermostat's target handle: there is no target yet.
 
+**The needles' colour.** Needles, pivots, markers and the crossing's ring share one
+colour: the thermostat's current-value marker, `--primary-text-color` at 50 %. It is
+mixed solid against `--card-background-color` instead of drawn see-through, so the
+needles don't darken where they cross.
+
 **Pivots at the arch's base corners.** The temperature needle pivots at the lower left,
 the humidity needle at the lower right. Each pivot is a hollow ring in the needle's colour, sitting at
 the end of the opposite scale. A ring against the marker's solid dot keeps the two apart

@@ -173,6 +173,15 @@ class ArchDial extends LitElement {
   }
 
   static styles = css`
+    /* The thermostat's current-value marker colour: the primary text colour at 50 %, mixed
+       solid against the card so overlapping needles do not darken. */
+    :host {
+      --needle-color: color-mix(
+        in srgb,
+        var(--primary-text-color) 50%,
+        var(--card-background-color)
+      );
+    }
     .name {
       font-size: 16px;
       text-align: center;
@@ -246,24 +255,24 @@ class ArchDial extends LitElement {
       stroke-linejoin: round;
     }
     .needle {
-      stroke: var(--primary-text-color);
+      stroke: var(--needle-color);
       stroke-width: 2;
       stroke-linecap: round;
     }
     /* A hollow ring, so a pivot never looks like a marker in either theme. */
     .pivot {
       fill: var(--card-background-color);
-      stroke: var(--primary-text-color);
+      stroke: var(--needle-color);
       stroke-width: 2;
     }
     /* The marker: a solid dot in the needles' colour (dark in light mode, near-white in
        dark mode). */
     .value {
-      fill: var(--primary-text-color);
+      fill: var(--needle-color);
     }
     /* A ring in the needles' colour, like the pivots: the crossing reads as a joint. */
     .cross-border {
-      fill: var(--primary-text-color);
+      fill: var(--needle-color);
     }
     .verdict {
       text-anchor: middle;
