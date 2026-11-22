@@ -1,5 +1,6 @@
 import { LitElement, css, html, nothing, svg } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { comfortLevel, zoneColour, zoneOf } from "./comfort";
 import { parseConfig, type ComfortmeterCardConfig } from "./config";
 import {
   defaultScales,
@@ -34,17 +35,29 @@ export class ComfortmeterCard extends LitElement {
     const temperature = this.hass.states[this._config.temperature_entity];
     const humidity = this.hass.states[this._config.humidity_entity];
     const scales = defaultScales(temperature?.attributes.unit_of_measurement);
-    const dial = layoutDial(
-      { temperature: numberOf(temperature), humidity: numberOf(humidity) },
-      scales
-    );
+    const readings = {
+      temperature: numberOf(temperature),
+      humidity: numberOf(humidity),
+    };
+    const dial = layoutDial(readings, scales);
+    const zone =
+      readings.temperature !== undefined && readings.humidity !== undefined
+        ? zoneOf(
+            {
+              temperature: readings.temperature,
+              humidity: readings.humidity,
+            },
+            scales
+          )
+        : undefined;
+    const level = zone ? comfortLevel(zone) : undefined;
     return html`
       <ha-card>
         <svg
           class="dial"
           viewBox="0 30 320 296"
           role="img"
-          aria-label="Comfortmeter"
+          aria-label=${level ?? "Comfortmeter"}
         >
           <g class="scales">
             <path class="scale" d=${temperatureScalePath()} />
@@ -57,9 +70,15 @@ export class ComfortmeterCard extends LitElement {
           <path class="comfort-zone" d=${polygonPath(dial.comfortZone)} />
           ${needles(dial.temperatureNeedle, dial.humidityNeedle)}
           ${
-            dial.crossing
+            dial.crossing && zone
               ? svg`<circle class="crossing-ring" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="7" />
-                <circle class="crossing" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="6" />`
+                <circle class="crossing" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="6"
+                  style=${`fill: ${zoneColour(zone)}`} />`
+              : nothing
+          }
+          ${
+            level
+              ? svg`<text class="comfort-level" x="160" y="316">${level}</text>`
               : nothing
           }
         </svg>
@@ -116,10 +135,18 @@ export class ComfortmeterCard extends LitElement {
       stroke: var(--comfortmeter-needle-color);
       stroke-width: 2;
     }
+    /* The crossing's ring is in the needles' colour, like the pivots, so the crossing
+       reads as a joint of the needles; its dot takes the zone's colour. */
     .marker,
-    .crossing-ring,
-    .crossing {
+    .crossing-ring {
       fill: var(--comfortmeter-needle-color);
+    }
+    /* Under the base, where the needles never reach. */
+    .comfort-level {
+      text-anchor: middle;
+      font-size: 14px;
+      font-weight: 500;
+      fill: var(--primary-text-color);
     }
   `;
 }

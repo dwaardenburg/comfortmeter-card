@@ -69,4 +69,21 @@ describe("the card", () => {
       defined(root.querySelector(".needle.temperature")).getAttribute("x2")
     ).not.toBe(before);
   });
+
+  it("says how the air feels under the base", async () => {
+    const root = await mount(hassWith("26.3", "68"));
+    expect(root.querySelector(".comfort-level")?.textContent).toBe(
+      "Too warm and humid"
+    );
+    expect(root.querySelector(".crossing")?.getAttribute("style")).toContain(
+      "var(--red-color) 100%"
+    );
+  });
+
+  it("leaves out the crossing and the comfort level when a reading is unavailable", async () => {
+    const root = await mount(hassWith("21.5", "unavailable"));
+    expect(root.querySelectorAll(".needle")).toHaveLength(1);
+    expect(root.querySelector(".crossing")).toBeNull();
+    expect(root.querySelector(".comfort-level")).toBeNull();
+  });
 });
