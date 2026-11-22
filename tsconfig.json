@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    // Language options, as in Home Assistant's frontend
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    // Modules
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    // rspack's SWC loader transpiles; tsc only type-checks
+    "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/typescript/.tsbuildinfo",
+    // Type checking
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true,
+        "rules": {
+          "no-unknown-tag-name": "error",
+          "no-missing-import": "error",
+          "no-missing-element-type-definition": "error",
+          "no-unknown-attribute": "off",
+          "no-legacy-attribute": "error",
+          "no-incompatible-type-binding": "warning",
+          "no-property-visibility-mismatch": "error",
+          "no-invalid-css": "off"
+        },
+        // Elements Home Assistant's frontend registers at runtime
+        "globalTags": ["ha-card"]
+      }
+    ]
+  },
+  "include": ["src", "test", "*.config.ts"]
+}

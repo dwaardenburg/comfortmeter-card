@@ -1,0 +1,10 @@
+name: Idea
+description: Something the card should show or do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to see, and why?
+    validations:
+      required: true

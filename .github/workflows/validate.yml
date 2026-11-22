@@ -1,0 +1,22 @@
+name: "Validate"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hacs: # https://github.com/hacs/action
+    name: "HACS validation"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: hacs/action@22.5.0
+        with:
+          category: plugin
