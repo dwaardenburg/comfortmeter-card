@@ -99,7 +99,7 @@ export class ComfortmeterCard extends LitElement {
 
   /** The card picker's first configuration: the first temperature and humidity sensors. */
   public static getStubConfig(hass: HomeAssistant) {
-    return stubConfig(hass.states);
+    return stubConfig(hass.states, hass.entities);
   }
 
   protected render() {
@@ -375,7 +375,13 @@ declare global {
     "comfortmeter-card": ComfortmeterCard;
   }
   interface Window {
-    customCards?: { type: string; name: string; description: string }[];
+    customCards?: {
+      type: string;
+      name: string;
+      description: string;
+      /** Draw the card from getStubConfig in the card picker. */
+      preview?: boolean;
+    }[];
   }
 }
 
@@ -385,4 +391,5 @@ window.customCards.push({
   name: "Comfortmeter",
   description:
     "Temperature and humidity as two crossing needles over a comfort zone.",
+  preview: true,
 });

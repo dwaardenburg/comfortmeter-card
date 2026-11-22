@@ -148,6 +148,66 @@ describe("stubConfig", () => {
     });
   });
 
+  it("prefers a pair on one device, both available", () => {
+    const unavailable = { ...sensor("humidity"), state: "unavailable" };
+    expect(
+      stubConfig(
+        {
+          "sensor.aviary_temperature": sensor("temperature"),
+          "sensor.bathroom_mold_indicator": unavailable,
+          "sensor.hall_temperature": sensor("temperature"),
+          "sensor.hall_humidity": sensor("humidity"),
+          "sensor.aviary_humidity": sensor("humidity"),
+        },
+        {
+          "sensor.aviary_temperature": { device_id: "aviary" },
+          "sensor.bathroom_mold_indicator": { device_id: "bathroom" },
+          "sensor.hall_temperature": { device_id: "hall-thermometer" },
+          "sensor.hall_humidity": { device_id: "hall-hygrometer" },
+          "sensor.aviary_humidity": { device_id: "aviary" },
+        }
+      )
+    ).toEqual({
+      temperature_entity: "sensor.aviary_temperature",
+      humidity_entity: "sensor.aviary_humidity",
+    });
+  });
+
+  it("skips unavailable sensors when no device has both", () => {
+    expect(
+      stubConfig({
+        "sensor.attic_temperature": {
+          ...sensor("temperature"),
+          state: "unknown",
+        },
+        "sensor.bathroom_mold_indicator": {
+          ...sensor("humidity"),
+          state: "unavailable",
+        },
+        "sensor.hall_temperature": sensor("temperature"),
+        "sensor.hall_humidity": sensor("humidity"),
+      })
+    ).toEqual({
+      temperature_entity: "sensor.hall_temperature",
+      humidity_entity: "sensor.hall_humidity",
+    });
+  });
+
+  it("takes unavailable sensors when there are no others", () => {
+    expect(
+      stubConfig({
+        "sensor.hall_temperature": {
+          ...sensor("temperature"),
+          state: "unavailable",
+        },
+        "sensor.hall_humidity": { ...sensor("humidity"), state: "unavailable" },
+      })
+    ).toEqual({
+      temperature_entity: "sensor.hall_temperature",
+      humidity_entity: "sensor.hall_humidity",
+    });
+  });
+
   it("falls back to example entities that the editor flags as missing", () => {
     expect(stubConfig({})).toEqual({
       temperature_entity: "sensor.temperature",

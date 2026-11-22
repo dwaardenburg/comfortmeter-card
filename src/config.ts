@@ -1,5 +1,5 @@
 import { defaultScales, type Scale, type Scales } from "./dial";
-import type { HassEntity } from "./home-assistant";
+import type { EntityRegistryDisplayEntry, HassEntity } from "./home-assistant";
 
 /** One scale's options; any key left out keeps its default. */
 export type ScaleOptions = Partial<Scale>;
@@ -127,21 +127,43 @@ function layOver(
   return merged;
 }
 
+const NO_READING = new Set(["unavailable", "unknown"]);
+
 /**
- * The card picker's first configuration: the first temperature and humidity sensors in
- * the house, or example entity ids that the editor shows as missing.
+ * The card picker's first configuration, which it also draws as the card's preview: a
+ * temperature and a humidity sensor from one device, both reporting; else the first two
+ * that report; else the first two at all; else example entity ids that the editor shows
+ * as missing. Taking the first of each alone once paired an aviary with a bathroom's
+ * unavailable mold indicator.
  */
 export function stubConfig(
-  states: Record<string, HassEntity | undefined>
+  states: Record<string, HassEntity | undefined>,
+  entities: Record<string, EntityRegistryDisplayEntry | undefined> = {}
 ): Pick<ComfortmeterCardConfig, "temperature_entity" | "humidity_entity"> {
-  const first = (deviceClass: string) =>
-    Object.keys(states).find(
+  const sensors = (deviceClass: string) =>
+    Object.keys(states).filter(
       (id) =>
         id.startsWith("sensor.") &&
         states[id]?.attributes.device_class === deviceClass
     );
+  const reporting = (id: string) => !NO_READING.has(states[id]?.state ?? "");
+  const temperatures = sensors("temperature");
+  const humidities = sensors("humidity");
+  const device = (id: string) => entities[id]?.device_id;
+  for (const temperature of temperatures.filter(reporting)) {
+    const humidity = humidities.find(
+      (id) =>
+        reporting(id) &&
+        device(id) !== undefined &&
+        device(id) === device(temperature)
+    );
+    if (humidity) {
+      return { temperature_entity: temperature, humidity_entity: humidity };
+    }
+  }
+  const first = (ids: string[]) => ids.find(reporting) ?? ids[0];
   return {
-    temperature_entity: first("temperature") ?? "sensor.temperature",
-    humidity_entity: first("humidity") ?? "sensor.humidity",
+    temperature_entity: first(temperatures) ?? "sensor.temperature",
+    humidity_entity: first(humidities) ?? "sensor.humidity",
   };
 }

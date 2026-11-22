@@ -13,6 +13,8 @@ export interface HassEntity {
 export interface EntityRegistryDisplayEntry {
   /** The decimals the user set for the entity, if any. */
   display_precision?: number;
+  /** The device the entity belongs to, if any. */
+  device_id?: string;
 }
 
 export interface HomeAssistant {
