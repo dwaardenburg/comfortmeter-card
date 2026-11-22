@@ -10,4 +10,6 @@ export interface HassEntity {
 
 export interface HomeAssistant {
   states: Record<string, HassEntity | undefined>;
+  /** An entity's state as Home Assistant shows it: its display precision, unit and locale. */
+  formatEntityState(entity: HassEntity): string;
 }

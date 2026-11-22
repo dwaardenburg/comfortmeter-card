@@ -11,6 +11,8 @@ import {
   type Needle,
 } from "./dial";
 import type { HassEntity, HomeAssistant } from "./home-assistant";
+import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
+import { readingOf } from "./reading";
 
 /**
  * The comfortmeter card: a temperature and a humidity needle on one dial, crossing over
@@ -36,8 +38,8 @@ export class ComfortmeterCard extends LitElement {
     const humidity = this.hass.states[this._config.humidity_entity];
     const scales = defaultScales(temperature?.attributes.unit_of_measurement);
     const readings = {
-      temperature: numberOf(temperature),
-      humidity: numberOf(humidity),
+      temperature: readingOf(temperature),
+      humidity: readingOf(humidity),
     };
     const dial = layoutDial(readings, scales);
     const zone =
@@ -51,8 +53,25 @@ export class ComfortmeterCard extends LitElement {
           )
         : undefined;
     const level = zone ? comfortLevel(zone) : undefined;
+    const shown = (entity: HassEntity | undefined) =>
+      entity && readingOf(entity) !== undefined
+        ? this.hass?.formatEntityState(entity)
+        : "—";
     return html`
       <ha-card>
+        ${
+          this._config.name
+            ? html`<div class="name">${this._config.name}</div>`
+            : nothing
+        }
+        <div class="readings">
+          <div class="reading humidity">
+            ${icon(mdiWaterPercent)}<span>${shown(humidity)}</span>
+          </div>
+          <div class="reading temperature">
+            ${icon(mdiThermometer)}<span>${shown(temperature)}</span>
+          </div>
+        </div>
         <svg
           class="dial"
           viewBox="0 30 320 296"
@@ -95,6 +114,43 @@ export class ComfortmeterCard extends LitElement {
         var(--primary-text-color) 75%,
         var(--card-background-color, white)
       );
+    }
+    ha-card {
+      position: relative;
+    }
+    /* The room name on one line, as on the thermostat card. */
+    .name {
+      font-size: 16px;
+      text-align: center;
+      padding: 12px 16px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* The readings sit in the empty corners beside the apex, under the name, in front
+       of the dial. */
+    .readings {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 12px 0;
+      margin-bottom: -28px;
+      font-size: 14px;
+      color: var(--secondary-text-color);
+    }
+    .reading {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      white-space: nowrap;
+    }
+    .icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      flex: none;
     }
     .dial {
       display: block;
@@ -176,11 +232,6 @@ function needles(
         svg`<circle class="marker" cx=${marker[0]} cy=${marker[1]} r="5" />`
     )}
   `;
-}
-
-function numberOf(entity: HassEntity | undefined): number | undefined {
-  const reading = Number.parseFloat(entity?.state ?? "");
-  return Number.isFinite(reading) ? reading : undefined;
 }
 
 declare global {

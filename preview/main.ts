@@ -181,6 +181,8 @@ const scenarios: Scenario[] = [
 
 function hassFor(scenario: Scenario): HomeAssistant {
   return {
+    formatEntityState: (entity) =>
+      `${entity.state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
     states: {
       "sensor.room_temperature": {
         state: scenario.temperature,

@@ -16,6 +16,8 @@ function hassWith(
   unit = "°C"
 ): HomeAssistant {
   return {
+    formatEntityState: (entity) =>
+      `${entity.state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
     states: {
       "sensor.room_temperature": {
         state: temperature,
@@ -85,5 +87,28 @@ describe("the card", () => {
     expect(root.querySelectorAll(".needle")).toHaveLength(1);
     expect(root.querySelector(".crossing")).toBeNull();
     expect(root.querySelector(".comfort-level")).toBeNull();
+  });
+
+  it("shows the room name and both readings", async () => {
+    const root = await mount(hassWith("21.5", "48"), { name: "Living room" });
+    expect(root.querySelector(".name")?.textContent).toBe("Living room");
+    expect(
+      root.querySelector(".reading.temperature")?.textContent?.trim()
+    ).toBe("21.5 °C");
+    expect(root.querySelector(".reading.humidity")?.textContent?.trim()).toBe(
+      "48 %"
+    );
+  });
+
+  it("shows a dash for a reading the sensor cannot give", async () => {
+    const root = await mount(hassWith("21.5", "unavailable"));
+    expect(root.querySelector(".reading.humidity")?.textContent?.trim()).toBe(
+      "—"
+    );
+  });
+
+  it("leaves out the name when none is set", async () => {
+    const root = await mount(hassWith("21.5", "48"));
+    expect(root.querySelector(".name")).toBeNull();
   });
 });
