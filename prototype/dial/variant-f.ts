@@ -6,7 +6,7 @@
 //    colour; a small white dot on each current value; the room name on one line at the
 //    top with the readings in the corners below it; the verdict centred under the base.
 // A: F with the face coloured the way the crossing dot would be at each spot.
-// G: F with the band limits numbered at the arcs (the card's optional show_band_limits).
+// G: F with the comfort limits numbered at the arcs (the card's optional show_comfort_limits).
 import { LitElement, css, html, svg } from "lit";
 import { fmt, poly, type FakeHass } from "./geometry";
 import {
@@ -182,9 +182,8 @@ class ArchDial extends LitElement {
     }
     .reading {
       position: absolute;
-      /* Midway between the name and the arc below the reading (about y = 92 of the 30–326
-         viewBox), so 21 % down the dial, centred on its own height. */
-      top: 21%;
+      /* A little below the name, clear of the arc. */
+      top: 9%;
       transform: translateY(-50%);
       display: flex;
       align-items: center;

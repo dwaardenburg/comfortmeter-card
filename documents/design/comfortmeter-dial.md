@@ -71,12 +71,12 @@ band the reading is in. When both readings are off, the temperature's colour win
 | too dry     | `--state-climate-dry-color`  |
 | too humid   | `--indigo-color`             |
 
-Soft band lines run from each pivot towards its band limits and stop just short of the
+Soft band lines run from each pivot towards its comfort limits and stop just short of the
 arcs, so the band edges show without colour. There are no band words, extra rings or
 tolerable field. More can come later.
 
-**A verdict instead of the big number.** The thermostat's big number and its +/- buttons
-go. In their place the card shows only the verdict ("Comfortable", "Too humid"), centred
+**A comfort level instead of the big number.** The thermostat's big number and its +/- buttons
+go. In their place the card shows only the comfort level ("Comfortable", "Too humid"), centred
 under the arch's base, where the needles never reach. The prototype first put it just
 above the comfort zone, where it covered the crossing dot whenever the room was too warm
 and humid.
@@ -94,7 +94,7 @@ indoor comfort ranges.
 **Options: one optional block per scale.** Each block holds the scale's range and its
 comfortable band, with the min/max words Home Assistant's own cards use. Any key left out
 keeps its default.
-`show_band_limits` (default `false`) numbers the four band limits at the arcs, as on the
+`show_comfort_limits` (default `false`) numbers the four comfort limits at the arcs, as on the
 Fischer. It is off by default to keep the dial simple.
 
 ```yaml
@@ -109,7 +109,7 @@ temperature:
 humidity:
   comfortable_min: 40
   comfortable_max: 60
-show_band_limits: false
+show_comfort_limits: false
 ```
 
 **Minimum Home Assistant version: the current stable.** `hacs.json` declares the release

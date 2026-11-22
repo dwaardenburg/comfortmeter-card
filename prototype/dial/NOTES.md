@@ -76,12 +76,12 @@ was replaced:
 
 - **A (F with bands washed in the crossing colours):** each band is a soft wash in the
   colour the crossing dot takes in it.
-- **G (F with numbered band limits):** the four band limits are numbered at the arcs, as
+- **G (F with numbered comfort limits):** the four comfort limits are numbered at the arcs, as
   on the Fischer, and nothing else.
 
 ## Round six
 
-- G's numbers become the optional `show_band_limits`, off by default.
+- G's numbers become the optional `show_comfort_limits`, off by default.
 - The value dot is the small white current-value dot again, not the target handle.
 - A now colours the face the way the crossing dot would be at each spot: nine regions,
   one per band combination, so every crossing colour shows in one view.

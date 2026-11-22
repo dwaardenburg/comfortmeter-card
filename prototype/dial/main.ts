@@ -172,7 +172,7 @@ const variants = [
     name: "F with bands washed in the crossing colours",
   },
   { key: "F", tag: "variant-f", name: "full arcs, band lines, room name" },
-  { key: "G", tag: "variant-g", name: "F with numbered band limits" },
+  { key: "G", tag: "variant-g", name: "F with numbered comfort limits" },
 ];
 
 const asked = variants.findIndex(
