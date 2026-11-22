@@ -109,10 +109,25 @@ under the arch's base, where the needles never reach. The prototype first put it
 above the comfort zone, where it covered the crossing dot whenever the room was too warm
 and humid.
 
-**The room name on top, the readings below it.** The room name is centred at the top, as
-on the thermostat card, and stays on one line, cut off with an ellipsis when it is long.
-The two readings sit under it, in the empty corners beside the apex: the humidity at
-the left above its scale, the temperature at the right. Each has its Material Design icon,
+**The room name on top, the readings either side of it.** The room name is centred at the
+top, as on the thermostat card, and stays on one line, cut off with an ellipsis when it is
+long. The two readings share its line, at its ends: the humidity at the left above its
+scale, the temperature at the right. The thermostat card keeps its more-info button on
+that line too. Without a name the readings keep the line. When the whole name doesn't fit
+between them, the readings move down a line into the empty corners beside the apex, in
+front of the dial, without making the card taller: the name and the dial keep their
+places. Only when the two readings don't fit side by side does the card grow, with each
+reading on a line of its own, centred under the name. The card measures the
+name and the readings to choose, so the readings stay beside any name that fits
+(`src/header.ts`). Until
+[#12](https://github.com/dwaardenburg/comfortmeter-card/issues/12) the readings sat a line
+below the name, level with nothing on the dial.
+
+**The thermostat's spacing above the dial.** The name's line is the thermostat title's:
+8px above and below a 24px line. Below it the dial has the 8px the thermostat keeps round
+its slider, and its viewBox starts 3 units above the apex's rounded tip, as the
+thermostat's canvas does above its track. The gap from the name to the scales is then
+the thermostat's, about 19px. Each has its Material Design icon,
 as in Home Assistant: `mdi:thermometer` and `mdi:water-percent`.
 
 **Default comfortable bands.** Temperature 19–24 °C (66–75 °F for a °F sensor) and

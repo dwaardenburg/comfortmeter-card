@@ -73,14 +73,16 @@ class ThermostatStandIn extends LitElement {
   }
 
   static styles = css`
+    /* hui-thermostat-card's title, and the 8px round its slider. */
     .name {
       text-align: center;
       font-size: 16px;
-      padding: 12px 0 0;
+      line-height: 24px;
+      padding: 8px 30px;
     }
     .wrap {
       position: relative;
-      padding: 4px 12px 0;
+      padding: 8px;
     }
     svg {
       display: block;

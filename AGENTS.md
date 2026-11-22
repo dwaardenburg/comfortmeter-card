@@ -25,8 +25,8 @@ development: versions stay below 1.0 and options may still change.
 - `preview/`: the preview page (`pnpm run preview`, http://localhost:5181), the card
   beside a thermostat stand-in in light and dark. `preview/scenarios.ts` holds what it
   draws: the looks and the edge cases (missing, broken and extreme sensors, configurations
-  at odds). Add a case there for anything a sensor has really sent; `test/scenarios.test.ts`
-  mounts every one and checks it draws no NaN and no stray "undefined" text.
+  at odds). Each edge-case card combines variations that don't affect each other; add to
+  one for anything a sensor has really sent. `test/scenarios.test.ts` mounts every one and checks it draws no NaN and no stray "undefined" text.
 - `documents/design/`: how the card looks and why. `documents/research/`: findings with
   their sources.
 

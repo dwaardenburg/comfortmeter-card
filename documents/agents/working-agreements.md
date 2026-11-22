@@ -39,3 +39,10 @@ a theory. Cite the sources, and treat anecdotes as leads to verify. (from `home-
 **No counts or numbers in lists and headings** of skills, docs and comments: no "Two
 things that...", no numbered bold lead-ins. Use unnumbered bold lead-ins, so adding an
 item touches nothing else. (from `home-assistant`, 2026-09-02)
+
+## Testing
+
+**Combine independent edge cases.** On the preview page, one card carries several
+variations that don't affect each other, such as an unavailable sensor, a long name and a
+narrow width, rather than a card each. Split a case out only when a card looks off and
+the cause needs isolating. (2026-11-22)

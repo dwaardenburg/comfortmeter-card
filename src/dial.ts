@@ -76,6 +76,22 @@ export const HUMIDITY_PIVOT: Point = [160 + RADIUS / 2, BASE_Y];
 export const APEX: Point = [160, BASE_Y - RADIUS * Math.sin(Math.PI / 3)];
 export const BASE_MIDDLE: Point = [160, BASE_Y];
 
+/**
+ * How far the thermostat's track starts below the top of its canvas: radius 145 and a
+ * 24-wide stroke round a centre at 160 leave 3 units above the track.
+ */
+const TRACK_INSET = 160 - 145 - SCALE_WIDTH / 2;
+/** The canvas's lowest point, below the comfort level's words. */
+const DIAL_BOTTOM = 326;
+/**
+ * The dial's viewBox: the apex's rounded tip sits as far below the top as the
+ * thermostat's track does, so the gap from the name to the scales is the thermostat's.
+ */
+export const VIEW_BOX = (() => {
+  const top = APEX[1] - SCALE_WIDTH / 2 - TRACK_INSET;
+  return `0 ${top} 320 ${DIAL_BOTTOM - top}`;
+})();
+
 const HUMIDITY_SCALE: Scale = {
   min: 20,
   max: 100,

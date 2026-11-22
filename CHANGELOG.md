@@ -13,7 +13,7 @@ changes are listed under **Breaking changes**.
   light and dark themes.
 - The crossing takes a colour from blue through green to red for how warm the air feels,
   and the words under the dial say how comfortable it is, such as "Too warm and humid".
-- The room name on top and both readings beside the dial, with their icons. A reading
+- The room name on top with a reading either side, each with its icon. A reading
   shows at most one decimal.
 - `temperature` and `humidity` options set each scale's range and comfortable band.
   Temperatures follow the sensor's unit, °C or °F.

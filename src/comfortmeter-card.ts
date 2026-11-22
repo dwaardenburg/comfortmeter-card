@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing, svg } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
 import { comfortLevel, zoneColour, zoneOf } from "./comfort";
 import {
   parseConfig,
@@ -14,8 +14,10 @@ import {
   temperatureScalePath,
   type Needle,
   type Scales,
+  VIEW_BOX,
 } from "./dial";
 import { configForm } from "./editor";
+import { headerLayout, type HeaderLayout } from "./header";
 import type { HassEntity, HomeAssistant } from "./home-assistant";
 import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
 import { readingOf, shownReading } from "./reading";
@@ -30,8 +32,51 @@ export class ComfortmeterCard extends LitElement {
 
   @state() private _config?: ComfortmeterCardConfig;
 
+  @state() private _headerLayout: HeaderLayout = "inline";
+
+  @query(".header") private _header?: HTMLElement;
+
+  /** Measures the header again when it, or a reading in it, changes size. */
+  private _headerObserver = new ResizeObserver(() => this._layOutHeader());
+
   public setConfig(config: unknown): void {
     this._config = parseConfig(config);
+  }
+
+  public disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._headerObserver.disconnect();
+  }
+
+  protected updated(): void {
+    const header = this._header;
+    if (!header) return;
+    this._headerObserver.disconnect();
+    this._headerObserver.observe(header);
+    for (const reading of header.querySelectorAll(".reading")) {
+      this._headerObserver.observe(reading);
+    }
+    this._layOutHeader();
+  }
+
+  /** Chooses the header's layout from the widths its name and readings want. */
+  private _layOutHeader(): void {
+    const header = this._header;
+    if (!header || header.clientWidth === 0) return;
+    const style = getComputedStyle(header);
+    const width = (selector: string) =>
+      header.querySelector(selector)?.getBoundingClientRect().width ?? 0;
+    const layout = headerLayout({
+      available:
+        header.clientWidth -
+        parseFloat(style.paddingLeft) -
+        parseFloat(style.paddingRight),
+      name: header.querySelector(".name")?.scrollWidth ?? 0,
+      humidity: width(".reading.humidity"),
+      temperature: width(".reading.temperature"),
+      gap: parseFloat(style.columnGap),
+    });
+    if (layout !== this._headerLayout) this._headerLayout = layout;
   }
 
   /** The masonry view's height, in rows of about 50px. */
@@ -95,23 +140,23 @@ export class ComfortmeterCard extends LitElement {
       shownReading(hass, entity);
     return html`
       <ha-card>
-        ${
-          this._config.name
-            ? html`<div class="name">${this._config.name}</div>`
-            : nothing
-        }
         <div class="face">
-          <div class="readings">
+          <div class="header ${this._headerLayout}">
             <div class="reading humidity">
               ${icon(mdiWaterPercent)}<span>${shown(humidity)}</span>
             </div>
+            ${
+              this._config.name
+                ? html`<div class="name">${this._config.name}</div>`
+                : nothing
+            }
             <div class="reading temperature">
               ${icon(mdiThermometer)}<span>${shown(temperature)}</span>
             </div>
           </div>
           <svg
             class="dial"
-            viewBox="0 30 320 296"
+            viewBox=${VIEW_BOX}
             role="img"
             aria-label=${level ?? "Comfortmeter"}
           >
@@ -157,38 +202,73 @@ export class ComfortmeterCard extends LitElement {
         var(--card-background-color, white)
       );
     }
-    /* The readings and the dial keep the thermostat dial's size on a wide card. */
+    /* The header and the dial keep the thermostat dial's size on a wide card. */
     .face {
       max-width: 344px;
       margin: 0 auto;
     }
-    /* The room name on one line, as on the thermostat card. */
+    /* The thermostat card's title row: 8px above and below a 24px line. The readings sit
+       at its ends, where the thermostat keeps its more-info button, and keep the row
+       when there is no name. The layouts are chosen by headerLayout(). */
+    .header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "humidity name temperature";
+      align-items: center;
+      column-gap: 8px;
+      padding: 8px 12px;
+      line-height: 24px;
+    }
+    /* The readings' line takes no height: they hang into the empty corners beside the
+       apex, in front of the dial, so the dial keeps its place under the name. */
+    .header.stacked {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "name name"
+        "humidity temperature";
+    }
+    .header.stacked .reading {
+      position: relative;
+      z-index: 1;
+      margin-bottom: -24px;
+    }
+    .header.narrow {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "name"
+        "humidity"
+        "temperature";
+    }
+    /* As wide as its words, up to its cell, so its scrollWidth is the name's full width. */
     .name {
+      grid-area: name;
+      justify-self: center;
+      max-width: 100%;
+      min-width: 0;
       font-size: 16px;
-      text-align: center;
-      padding: 12px 16px 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-    /* The readings sit in the empty corners beside the apex, under the name, in front
-       of the dial. */
-    .readings {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 4px 12px 0;
-      margin-bottom: -28px;
-      font-size: 14px;
-      color: var(--secondary-text-color);
     }
     .reading {
       display: flex;
       align-items: center;
       gap: 2px;
       white-space: nowrap;
+      font-size: 14px;
+      color: var(--secondary-text-color);
+    }
+    .reading.humidity {
+      grid-area: humidity;
+      justify-self: start;
+    }
+    .reading.temperature {
+      grid-area: temperature;
+      justify-self: end;
+    }
+    .narrow .reading.humidity,
+    .narrow .reading.temperature {
+      justify-self: center;
     }
     .icon {
       width: 16px;
@@ -199,7 +279,8 @@ export class ComfortmeterCard extends LitElement {
     .dial {
       display: block;
       width: 100%;
-      padding: 0 12px 12px;
+      /* The thermostat slider's 8px, below the header's 8px. */
+      padding: 8px 12px 12px;
       box-sizing: border-box;
     }
     /* One group opacity, so the scales don't darken where they overlap at the apex. */

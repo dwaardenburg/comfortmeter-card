@@ -48,69 +48,58 @@ export const looks: Scenario[] = [
   },
 ];
 
-/** Sensors that are missing, broken or at the extremes, and configurations at odds. */
+/**
+ * Sensors that are missing, broken or at the extremes, and configurations at odds. Each
+ * card combines variations that don't affect each other, so a few cards cover them all;
+ * split one out when it looks off.
+ */
 export const edgeCases: Scenario[] = [
   {
-    label: "humidity unavailable",
-    temperature: "20.4",
-    humidity: "unavailable",
-  },
-  { label: "temperature unknown", temperature: "unknown", humidity: "48" },
-  {
-    label: "both unavailable",
-    temperature: "unavailable",
-    humidity: "unavailable",
-  },
-  { label: "both entities missing", temperature: null, humidity: null },
-  { label: "not a number", temperature: "error", humidity: "48 %" },
-  { label: "empty states", temperature: "", humidity: "" },
-  { label: "many decimals", temperature: "21.4567", humidity: "55.54" },
-  {
-    label: "registry precision 3",
+    label: "humidity unavailable · many decimals · no name",
     temperature: "21.4567",
-    humidity: "55.5",
-    precision: 3,
+    humidity: "unavailable",
+    options: { name: undefined },
   },
   {
-    label: "registry precision 0",
-    temperature: "21.4567",
-    humidity: "55.5",
-    precision: 0,
-  },
-  { label: "far below the scales", temperature: "-25.3", humidity: "0" },
-  { label: "far above the scales", temperature: "48.9", humidity: "100" },
-  { label: "humidity over 100 %", temperature: "22", humidity: "112" },
-  { label: "huge numbers", temperature: "1e9", humidity: "-1e9" },
-  {
-    label: "on the comfort limits",
-    temperature: "19",
+    label: "temperature unknown · on a comfort limit, numbered",
+    temperature: "unknown",
     humidity: "60",
     options: { show_comfort_limits: true },
   },
   {
-    label: "on the other limits",
+    label: "both entities missing · long name",
+    temperature: null,
+    humidity: null,
+    options: { name: "Master bedroom on the second floor, east side" },
+  },
+  {
+    label: "not a number · empty",
+    temperature: "error",
+    humidity: "",
+  },
+  {
+    label:
+      "registry precision 3 · far below the scales · °F · name not beside the readings",
+    width: 200,
+    temperature: "-13.4567",
+    humidity: "0",
+    unit: "°F",
+    precision: 3,
+  },
+  {
+    label: "registry precision 0 · far above · humidity over 100 % · wide",
+    temperature: "48.94",
+    humidity: "112",
+    precision: 0,
+    width: 540,
+  },
+  {
+    label: "on the other limits · no unit · band as wide as the scale",
     temperature: "24",
     humidity: "40",
-    options: { show_comfort_limits: true },
-  },
-  {
-    label: "no unit on temperature",
-    temperature: "21.5",
-    humidity: "48",
     unit: null,
-  },
-  {
-    label: "°C limits on a °F sensor",
-    temperature: "71.6",
-    humidity: "48",
-    unit: "°F",
-    options: { temperature: { comfortable_max: 25 } },
-  },
-  {
-    label: "comfort band as wide as the scale",
-    temperature: "21.5",
-    humidity: "48",
     options: {
+      show_comfort_limits: true,
       humidity: {
         min: 0,
         comfortable_min: 0.5,
@@ -119,14 +108,16 @@ export const edgeCases: Scenario[] = [
       },
     },
   },
+  { label: "huge numbers", temperature: "1e9", humidity: "-1e9" },
   {
-    label: "no name",
-    temperature: "21.5",
+    label: "°C limits on a °F sensor",
+    temperature: "71.6",
     humidity: "48",
-    options: { name: undefined },
+    unit: "°F",
+    options: { temperature: { comfortable_max: 25 } },
   },
   {
-    label: "narrow, the half section the sections view allows at least",
+    label: "half a section, the narrowest · readings on their own lines",
     temperature: "-12.5",
     humidity: "100",
     width: 155,
