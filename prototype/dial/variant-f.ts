@@ -23,18 +23,22 @@ import {
 import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
 
 const COLD = "var(--state-climate-cool-color)";
-const WARM = "var(--state-climate-heat-color)";
-const DRY = "var(--state-climate-dry-color)";
-const HUMID = "var(--indigo-color)";
+const HOT = "var(--red-color)";
 const OK = "var(--success-color)";
 
-/** The crossing dot's colour: the temperature's band wins when both are off. */
+/**
+ * A zone's colour on one felt-temperature scale, blue through green to red. The
+ * temperature band sets the step in threes; humidity moves it one step, humid warmer and
+ * dry cooler, as the heat index, humidex and ASHRAE 55 treat it. Nine zones, nine steps.
+ */
 function colourFor(tBand: string, hBand: string): string {
-  if (tBand === "too warm") return WARM;
-  if (tBand === "too cold") return COLD;
-  if (hBand === "too dry") return DRY;
-  if (hBand === "too humid") return HUMID;
-  return OK;
+  const t = tBand === "too cold" ? -1 : tBand === "too warm" ? 1 : 0;
+  const h = hBand === "too dry" ? -1 : hBand === "too humid" ? 1 : 0;
+  const step = 3 * t + h; // −4 … 4
+  if (step === 0) return OK;
+  // Share of blue or red mixed into the green per step away from comfortable.
+  const share = [0, 30, 55, 80, 100][Math.abs(step)];
+  return `color-mix(in oklab, ${step < 0 ? COLD : HOT} ${share}%, ${OK})`;
 }
 
 /**
@@ -156,8 +160,8 @@ class ArchDial extends LitElement {
             <line class="needle" x1=${HUM_PIVOT[0]} y1=${HUM_PIVOT[1]} x2=${r.hTip[0]} y2=${r.hTip[1]} />
             <circle class="pivot" cx=${TEMP_PIVOT[0]} cy=${TEMP_PIVOT[1]} r="4" />
             <circle class="pivot" cx=${HUM_PIVOT[0]} cy=${HUM_PIVOT[1]} r="4" />
-            <circle class="value" cx=${r.tTip[0]} cy=${r.tTip[1]} r="4" />
-            <circle class="value" cx=${r.hTip[0]} cy=${r.hTip[1]} r="4" />
+            <circle class="value" cx=${r.tTip[0]} cy=${r.tTip[1]} r="5" />
+            <circle class="value" cx=${r.hTip[0]} cy=${r.hTip[1]} r="5" />
             <circle cx=${c[0]} cy=${c[1]} r="8" class="cross-border" />
             <circle cx=${c[0]} cy=${c[1]} r="6" style="fill:${colourFor(r.tBand, r.hBand)}" />
           `}
@@ -245,13 +249,16 @@ class ArchDial extends LitElement {
       stroke-width: 2;
       stroke-linecap: round;
     }
+    /* A hollow ring, so a pivot never looks like a marker in either theme. */
     .pivot {
-      fill: var(--primary-text-color);
+      fill: var(--card-background-color);
+      stroke: var(--primary-text-color);
+      stroke-width: 2;
     }
-    /* The current value on its scale: small and white, like the thermostat's marker. */
+    /* The marker: a solid white dot with a thin dark edge. */
     .value {
       fill: white;
-      stroke: rgba(0, 0, 0, 0.2);
+      stroke: rgba(0, 0, 0, 0.45);
       stroke-width: 1;
     }
     .cross-border {

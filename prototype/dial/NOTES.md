@@ -97,6 +97,14 @@ was replaced:
   right. He confirmed it reads better.
 - B, C, D and E were dropped; A, F and G stay.
 
+## Round eight
+
+- Pivots are hollow rings and markers solid white dots, so they differ in dark mode too.
+- The nine zones take colours on one felt-temperature scale (blue, green, red): the
+  temperature band sets the step, and humid moves it one step warmer, dry one step
+  cooler. A shows all nine. At A's soft wash, neighbouring steps are hard to tell apart;
+  on the crossing they are clear.
+
 ## Verdict
 
 _To fill in with Daan._

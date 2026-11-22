@@ -35,13 +35,14 @@ because the prototype showed that the single arc squeezed the comfort zone into 
 low field. Because each needle sweeps a circle around its own pivot, its tip runs along its
 scale and its length stays the same.
 
-**A small white dot on each current value.** Where each needle meets its scale, a small
-white dot marks the current value, the size of the thermostat's current-temperature
-marker. It is not the thermostat's target handle: there is no target yet.
+**A marker on each reading.** Where each needle meets its scale, a marker shows the
+reading: a solid white dot with a thin dark edge, a little larger than the thermostat's
+current-temperature dot. It is not the thermostat's target handle: there is no target yet.
 
 **Pivots at the arch's base corners.** The temperature needle pivots at the lower left,
-the humidity needle at the lower right. Each pivot is a small dot in one colour, sitting at the
-end of the opposite scale. At both scale minimums the needles lie on the same line along
+the humidity needle at the lower right. Each pivot is a hollow ring in the needle's colour, sitting at
+the end of the opposite scale. A ring against the marker's solid dot keeps the two apart
+in both themes; as two dots, they looked the same in dark mode. At both scale minimums the needles lie on the same line along
 the base and have no crossing. The card then puts the crossing in the middle of the base.
 A 10 °C, 20 % room is rare indoors.
 
@@ -60,16 +61,30 @@ Scale numbers are left out for now.
 
 **Only the comfort zone is drawn.** The comfort zone is a green field
 (`--success-color`), four-sided with straight sides, where the two comfortable bands
-overlap. The other bands are not drawn: the dot at the crossing takes the colour of the
-band the reading is in. When both readings are off, the temperature's colour wins.
+overlap. The other zones are not drawn: the crossing takes its zone's colour.
 
-| Band        | Colour                       |
-| ----------- | ---------------------------- |
-| comfortable | `--success-color`            |
-| too warm    | `--state-climate-heat-color` |
-| too cold    | `--state-climate-cool-color` |
-| too dry     | `--state-climate-dry-color`  |
-| too humid   | `--indigo-color`             |
+**Zone colours follow felt temperature.** Each of the nine zones has its own colour on
+one scale from blue through green to red. The temperature band sets the main step, and
+humidity moves it one step: humid feels warmer and dry feels cooler. That is how the heat
+index, humidex and the ASHRAE 55 comfort zone treat humidity. The popular idea that damp
+cold feels colder has little evidence behind it, so the card does not use it
+([Globe and Mail](https://www.theglobeandmail.com/life/health-and-fitness/fitness/is-damp-cold-really-the-worst/article28346087/),
+[Tempest](https://tempest.earth/resources/dry-cold-vs-humid-cold/)). Daan asked for the
+generally accepted model, not intuition, to lead. The colours are mixed from three theme
+colours: `--state-climate-cool-color` for cold, `--success-color` for comfortable and
+`--red-color` for hot, with 30, 55, 80 and 100 % of blue or red per step.
+
+| Zone               | Step | Colour    |
+| ------------------ | ---- | --------- |
+| too cold and dry   | −4   | blue      |
+| too cold           | −3   | 80 % blue |
+| too cold and humid | −2   | 55 % blue |
+| too dry            | −1   | 30 % blue |
+| comfortable        | 0    | green     |
+| too humid          | 1    | 30 % red  |
+| too warm and dry   | 2    | 55 % red  |
+| too warm           | 3    | 80 % red  |
+| too warm and humid | 4    | red       |
 
 Soft band lines run from each pivot towards its comfort limits and stop just short of the
 arcs, so the band edges show without colour. There are no band words, extra rings or
