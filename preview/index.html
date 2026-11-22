@@ -27,6 +27,12 @@
       .cell {
         width: 260px;
       }
+      .row + h2 {
+        margin-top: 24px;
+      }
+      .cell p.rejected {
+        color: #db4437;
+      }
       .cell p {
         font: 11px monospace;
         color: var(--secondary-text-color);
@@ -61,12 +67,16 @@
   </head>
   <body>
     <section class="theme" id="light">
-      <h2>light</h2>
-      <div class="row"></div>
+      <h2>light · looks</h2>
+      <div class="row looks"></div>
+      <h2>light · edge cases</h2>
+      <div class="row edge"></div>
     </section>
     <section class="theme" id="dark">
-      <h2>dark</h2>
-      <div class="row"></div>
+      <h2>dark · looks</h2>
+      <div class="row looks"></div>
+      <h2>dark · edge cases</h2>
+      <div class="row edge"></div>
     </section>
     <script type="module" src="dist/preview.js"></script>
     <script type="module" src="dist/comfortmeter-card.js"></script>

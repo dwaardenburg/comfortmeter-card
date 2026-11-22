@@ -22,6 +22,11 @@ development: versions stay below 1.0 and options may still change.
   Home Assistant does not publish frontend types, so declare only what is used.
 - `test/`: Vitest. Geometry and config logic are tested here as plain functions; keep
   them out of the element so they can be.
+- `preview/`: the preview page (`pnpm run preview`, http://localhost:5181), the card
+  beside a thermostat stand-in in light and dark. `preview/scenarios.ts` holds what it
+  draws: the looks and the edge cases (missing, broken and extreme sensors, configurations
+  at odds). Add a case there for anything a sensor has really sent; `test/scenarios.test.ts`
+  mounts every one and checks it draws no NaN and no stray "undefined" text.
 - `documents/design/`: how the card looks and why. `documents/research/`: findings with
   their sources.
 

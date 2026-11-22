@@ -1,8 +1,17 @@
 // The card's preview page, for development only: a stand-in `ha-card` and thermostat
 // card, and the built card at a set of readings, in Home Assistant's light and dark
-// themes. Every change to how the card looks is checked here.
+// themes, and the edge cases in preview/scenarios.ts. Every change to how the card looks
+// is checked here.
 import { LitElement, css, html, svg } from "lit";
 import type { HomeAssistant } from "../src/home-assistant";
+import {
+  captionFor,
+  configFor,
+  edgeCases,
+  hassFor,
+  looks,
+  type Scenario,
+} from "./scenarios";
 
 /** A stand-in for Home Assistant's own `ha-card`, which only exists inside the frontend. */
 customElements.define(
@@ -152,101 +161,44 @@ class ThermostatStandIn extends LitElement {
 }
 customElements.define("thermostat-stand-in", ThermostatStandIn);
 
-interface Scenario {
-  label: string;
-  temperature: string;
-  humidity: string;
-  unit?: string;
-  options?: Record<string, unknown>;
-  /** Shown as a full-width card in the sections view. */
-  wide?: boolean;
-}
-
-const scenarios: Scenario[] = [
-  { label: "comfortable", temperature: "21.5", humidity: "48" },
-  { label: "too warm and humid", temperature: "26.3", humidity: "68" },
-  { label: "cold, pinned below 10 °C", temperature: "8.0", humidity: "37" },
-  {
-    label: "°F sensor, long room name",
-    temperature: "71.6",
-    humidity: "55",
-    unit: "°F",
-    options: { name: "Master bedroom on the second floor, east side" },
-  },
-  { label: "both at their minimums", temperature: "9.0", humidity: "18" },
-  {
-    label: "comfortable up to 27 °C and 65 %",
-    temperature: "26.3",
-    humidity: "63",
-    options: {
-      temperature: { comfortable_max: 27 },
-      humidity: { comfortable_max: 65 },
-    },
-  },
-  { label: "a wide card", temperature: "22.8", humidity: "57", wide: true },
-  {
-    label: "show_comfort_limits",
-    temperature: "21.5",
-    humidity: "48",
-    options: { show_comfort_limits: true },
-  },
-  {
-    label: "humidity unavailable",
-    temperature: "20.4",
-    humidity: "unavailable",
-  },
-];
-
-function hassFor(scenario: Scenario): HomeAssistant {
-  return {
-    formatEntityState: (entity, state = entity.state) =>
-      `${state} ${entity.attributes.unit_of_measurement ?? ""}`.trim(),
-    states: {
-      "sensor.room_temperature": {
-        entity_id: "sensor.room_temperature",
-        state: scenario.temperature,
-        attributes: { unit_of_measurement: scenario.unit ?? "°C" },
-      },
-      "sensor.room_humidity": {
-        entity_id: "sensor.room_humidity",
-        state: scenario.humidity,
-        attributes: { unit_of_measurement: "%" },
-      },
-    },
-  };
-}
-
 type CardElement = HTMLElement & {
   setConfig(config: unknown): void;
   hass: HomeAssistant;
 };
 
+/** A cell with the card in a scenario, or the error its configuration throws. */
+function cellFor(scenario: Scenario): HTMLElement {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  if (scenario.width) cell.style.width = `${scenario.width}px`;
+  const card = document.createElement("comfortmeter-card") as CardElement;
+  try {
+    card.setConfig(configFor(scenario));
+    card.hass = hassFor(scenario);
+    cell.append(card);
+  } catch (error) {
+    const rejected = document.createElement("p");
+    rejected.className = "rejected";
+    rejected.textContent = `setConfig: ${(error as Error).message}`;
+    cell.append(rejected);
+  }
+  const caption = document.createElement("p");
+  caption.textContent = captionFor(scenario);
+  cell.append(caption);
+  return cell;
+}
+
 function render() {
   for (const theme of ["light", "dark"]) {
-    const row = document.querySelector(`#${theme} .row`);
-    if (!row) continue;
+    const looksRow = document.querySelector(`#${theme} .looks`);
+    const edgeRow = document.querySelector(`#${theme} .edge`);
+    if (!looksRow || !edgeRow) continue;
     const stand = document.createElement("div");
     stand.className = "cell";
     stand.innerHTML = `<thermostat-stand-in></thermostat-stand-in><p>thermostat stand-in</p>`;
-    row.append(stand);
-    for (const scenario of scenarios) {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      if (scenario.wide) cell.style.width = "540px";
-      const card = document.createElement("comfortmeter-card") as CardElement;
-      card.setConfig({
-        type: "custom:comfortmeter-card",
-        temperature_entity: "sensor.room_temperature",
-        humidity_entity: "sensor.room_humidity",
-        name: "Living room",
-        ...scenario.options,
-      });
-      card.hass = hassFor(scenario);
-      const caption = document.createElement("p");
-      caption.textContent = `${scenario.temperature} ${scenario.unit ?? "°C"}, ${scenario.humidity} % · ${scenario.label}`;
-      cell.append(card, caption);
-      row.append(cell);
-    }
+    looksRow.append(stand);
+    looksRow.append(...looks.map(cellFor));
+    edgeRow.append(...edgeCases.map(cellFor));
   }
 }
 
