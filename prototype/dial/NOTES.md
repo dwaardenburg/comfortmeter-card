@@ -109,7 +109,8 @@ was replaced:
 
 - A is now a debugging view of the zone colours, not a design candidate.
 - Markers lost their edge; the crossing's ring is now in the needles' colour.
-- In light mode the edgeless white markers almost vanish on the pale track.
+- In light mode the edgeless white markers almost vanished on the pale track, so markers
+  now take the needles' colour. The crossing's ring went from 2px to 1px.
 
 ## Verdict
 

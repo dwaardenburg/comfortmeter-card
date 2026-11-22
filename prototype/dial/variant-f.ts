@@ -163,7 +163,7 @@ class ArchDial extends LitElement {
             <circle class="pivot" cx=${HUM_PIVOT[0]} cy=${HUM_PIVOT[1]} r="4" />
             <circle class="value" cx=${r.tTip[0]} cy=${r.tTip[1]} r="5" />
             <circle class="value" cx=${r.hTip[0]} cy=${r.hTip[1]} r="5" />
-            <circle cx=${c[0]} cy=${c[1]} r="8" class="cross-border" />
+            <circle cx=${c[0]} cy=${c[1]} r="7" class="cross-border" />
             <circle cx=${c[0]} cy=${c[1]} r="6" style="fill:${colourFor(r.tBand, r.hBand)}" />
           `}
           <text class="verdict" x="160" y="316">${r.verdict}</text>
@@ -256,9 +256,10 @@ class ArchDial extends LitElement {
       stroke: var(--primary-text-color);
       stroke-width: 2;
     }
-    /* The marker: a solid white dot. */
+    /* The marker: a solid dot in the needles' colour (dark in light mode, near-white in
+       dark mode). */
     .value {
-      fill: white;
+      fill: var(--primary-text-color);
     }
     /* A ring in the needles' colour, like the pivots: the crossing reads as a joint. */
     .cross-border {
