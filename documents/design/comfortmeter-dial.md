@@ -188,7 +188,13 @@ still show in the card's preview, as above.
 
 **The dial keeps the thermostat's size.** On a wide card the readings and the dial stay at
 most 344px wide, centred, as the thermostat card's dial does. In the sections view the card
-starts half a section wide and as tall as the dial needs.
+starts a full section wide, at least half, and as tall as the dial needs, as the thermostat
+card does. It started half a section wide until
+[#10](https://github.com/dwaardenburg/comfortmeter-card/issues/10): beside an empty half, the
+dial drew about 155px wide and the comfort level under it shrank to 5-6px. Moving the text
+out of the SVG was the other option; the full-width default was chosen because it also
+matches the thermostat card above or below it. At half a section the comfort level is
+still small.
 
 ## The prototype's verdict
 

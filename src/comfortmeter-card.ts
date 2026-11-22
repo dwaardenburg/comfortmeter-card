@@ -39,9 +39,12 @@ export class ComfortmeterCard extends LitElement {
     return 6;
   }
 
-  /** The sections view's size: half a section wide, as tall as the dial needs. */
+  /**
+   * The sections view's size: a full section wide and at least half, as the thermostat
+   * card, so the comfort level under the dial stays readable; as tall as the dial needs.
+   */
   public getGridOptions() {
-    return { columns: 6, rows: "auto", min_columns: 4 };
+    return { columns: 12, rows: "auto", min_columns: 6 };
   }
 
   /** The visual editor, drawn by Home Assistant from a form schema. */

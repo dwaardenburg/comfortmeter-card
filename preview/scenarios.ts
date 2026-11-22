@@ -126,7 +126,7 @@ export const edgeCases: Scenario[] = [
     options: { name: undefined },
   },
   {
-    label: "narrow, as half a sections column",
+    label: "narrow, the half section the sections view allows at least",
     temperature: "-12.5",
     humidity: "100",
     width: 155,

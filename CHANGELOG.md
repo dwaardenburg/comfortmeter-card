@@ -19,8 +19,8 @@ changes are listed under **Breaking changes**.
   Temperatures follow the sensor's unit, °C or °F.
 - `show_comfort_limits` numbers the comfort limits at the scales.
 - A sensor that is unavailable shows "—", and its needle is left out.
-- The card sizes itself in the sections view and suggests your first temperature and
-  humidity sensors in the card picker.
+- The card takes a full section's width in the sections view, as the thermostat card does,
+  and suggests your first temperature and humidity sensors in the card picker.
 - A visual editor: pick the sensors from those with the right device class, set the name,
   and open each scale's options when you want to change them.
 - Requires Home Assistant 2026.11 or later.
