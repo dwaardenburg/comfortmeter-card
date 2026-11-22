@@ -173,6 +173,15 @@ const scenarios: Scenario[] = [
   },
   { label: "both at their minimums", temperature: "9.0", humidity: "18" },
   {
+    label: "comfortable up to 27 °C and 65 %",
+    temperature: "26.3",
+    humidity: "63",
+    options: {
+      temperature: { comfortable_max: 27 },
+      humidity: { comfortable_max: 65 },
+    },
+  },
+  {
     label: "humidity unavailable",
     temperature: "20.4",
     humidity: "unavailable",

@@ -111,4 +111,23 @@ describe("the card", () => {
     const root = await mount(hassWith("21.5", "48"));
     expect(root.querySelector(".name")).toBeNull();
   });
+
+  it("follows a custom comfortable band", async () => {
+    const root = await mount(hassWith("26.3", "55"), {
+      temperature: { comfortable_max: 27 },
+    });
+    expect(root.querySelector(".comfort-level")?.textContent).toBe(
+      "Comfortable"
+    );
+  });
+
+  it("names the option when the scale is out of order for the sensor's unit", async () => {
+    const root = await mount(hassWith("21.5", "48"), {
+      temperature: { comfortable_min: 68 },
+    });
+    expect(root.querySelector(".dial")).toBeNull();
+    expect(root.querySelector(".warning")?.textContent).toContain(
+      "temperature.comfortable_min"
+    );
+  });
 });

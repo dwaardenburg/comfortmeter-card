@@ -1,14 +1,14 @@
 import { LitElement, css, html, nothing, svg } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { comfortLevel, zoneColour, zoneOf } from "./comfort";
-import { parseConfig, type ComfortmeterCardConfig } from "./config";
+import { parseConfig, scalesFor, type ComfortmeterCardConfig } from "./config";
 import {
-  defaultScales,
   humidityScalePath,
   layoutDial,
   polygonPath,
   temperatureScalePath,
   type Needle,
+  type Scales,
 } from "./dial";
 import type { HassEntity, HomeAssistant } from "./home-assistant";
 import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
@@ -36,7 +36,17 @@ export class ComfortmeterCard extends LitElement {
     if (!this._config || !this.hass) return nothing;
     const temperature = this.hass.states[this._config.temperature_entity];
     const humidity = this.hass.states[this._config.humidity_entity];
-    const scales = defaultScales(temperature?.attributes.unit_of_measurement);
+    let scales: Scales;
+    try {
+      scales = scalesFor(
+        this._config,
+        temperature?.attributes.unit_of_measurement
+      );
+    } catch (error) {
+      return html`<ha-card>
+        <p class="warning">${(error as Error).message}</p>
+      </ha-card>`;
+    }
     const readings = {
       temperature: readingOf(temperature),
       humidity: readingOf(humidity),
@@ -196,6 +206,11 @@ export class ComfortmeterCard extends LitElement {
     .marker,
     .crossing-ring {
       fill: var(--comfortmeter-needle-color);
+    }
+    .warning {
+      margin: 0;
+      padding: 16px;
+      color: var(--error-color);
     }
     /* Under the base, where the needles never reach. */
     .comfort-level {
