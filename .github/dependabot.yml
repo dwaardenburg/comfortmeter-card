@@ -5,6 +5,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Stay on TypeScript 6 for tooling, as Home Assistant's frontend does: typescript-eslint
+    # and lit-analyzer do not support TypeScript 7 yet.
+    ignore:
+      - dependency-name: "typescript"
+        versions: [">=7"]
     groups:
       npm-dependencies:
         patterns: ["*"]

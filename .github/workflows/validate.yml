@@ -1,12 +1,11 @@
 name: "Validate"
 
+# HACS only accepts a card repo that has a release (or a built file committed to dist/,
+# which this repo does not do), so validation runs on every published release and by hand.
+# Add a weekly schedule once 0.1.0 is out.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  schedule:
-    - cron: "0 0 * * 1"
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
