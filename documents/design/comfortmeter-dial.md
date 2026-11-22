@@ -41,7 +41,8 @@ mode), a little larger than the thermostat's
 current-temperature dot. It is not the thermostat's target handle: there is no target yet.
 
 **The needles' colour.** Needles, pivots, markers and the crossing's ring share one
-colour: the thermostat's current-value marker, `--primary-text-color` at 50 %. It is
+colour: `--primary-text-color` at 75 %, halfway between the full text colour and the
+thermostat's current-value marker (50 %), which looked too faint for the needles. It is
 mixed solid against `--card-background-color` instead of drawn see-through, so the
 needles don't darken where they cross.
 
@@ -145,9 +146,14 @@ Older installs are not supported. The lower bound that matters technically was 2
 when [`getGridOptions()`](https://developers.home-assistant.io/blog/2024/11/06/custom-card-sections-support)
 arrived for the sections view.
 
-## Left to the prototype
+## The prototype's verdict
 
-The type size of the header readings.
+The prototype in `prototype/dial/` ran ten rounds next to a thermostat-card stand-in, in
+light and dark. Daan chose **variant F** for the first release on 2026-11-22. Two other
+variants stay as references for the build. **G** shows `show_comfort_limits` turned on.
+**A** is the zone-colour debugging view. The decisions above describe F. The
+prototype's code is throwaway: the build rewrites it in `src/` with tests for the
+geometry, then deletes `prototype/dial/`.
 
 ## Leads
 

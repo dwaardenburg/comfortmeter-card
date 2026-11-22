@@ -119,4 +119,7 @@ marker colour: the primary text colour at 50 %, mixed solid against the card.
 
 ## Verdict
 
-_To fill in with Daan._
+**F wins** (2026-11-22). G stays as the look of `show_comfort_limits: true`, and A as
+the zone-colour debugging view. The decisions are in
+[documents/design/comfortmeter-dial.md](../../documents/design/comfortmeter-dial.md).
+Delete this folder once the dial is built in `src/`.

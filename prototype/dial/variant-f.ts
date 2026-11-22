@@ -178,7 +178,7 @@ class ArchDial extends LitElement {
     :host {
       --needle-color: color-mix(
         in srgb,
-        var(--primary-text-color) 50%,
+        var(--primary-text-color) 75%,
         var(--card-background-color)
       );
     }
