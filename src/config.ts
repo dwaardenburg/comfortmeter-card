@@ -1,4 +1,5 @@
 import { defaultScales, type Scale, type Scales } from "./dial";
+import type { HassEntity } from "./home-assistant";
 
 /** One scale's options; any key left out keeps its default. */
 export type ScaleOptions = Partial<Scale>;
@@ -124,4 +125,23 @@ function layOver(
     );
   });
   return merged;
+}
+
+/**
+ * The card picker's first configuration: the first temperature and humidity sensors in
+ * the house, or example entity ids that the editor shows as missing.
+ */
+export function stubConfig(
+  states: Record<string, HassEntity | undefined>
+): Pick<ComfortmeterCardConfig, "temperature_entity" | "humidity_entity"> {
+  const first = (deviceClass: string) =>
+    Object.keys(states).find(
+      (id) =>
+        id.startsWith("sensor.") &&
+        states[id]?.attributes.device_class === deviceClass
+    );
+  return {
+    temperature_entity: first("temperature") ?? "sensor.temperature",
+    humidity_entity: first("humidity") ?? "sensor.humidity",
+  };
 }

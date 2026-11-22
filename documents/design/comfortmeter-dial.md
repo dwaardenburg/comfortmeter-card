@@ -146,18 +146,47 @@ Older installs are not supported. The lower bound that matters technically was 2
 when [`getGridOptions()`](https://developers.home-assistant.io/blog/2024/11/06/custom-card-sections-support)
 arrived for the sections view.
 
+## Decided while building
+
+Settled in the build ([#3](https://github.com/dwaardenburg/comfortmeter-card/issues/3) to
+[#9](https://github.com/dwaardenburg/comfortmeter-card/issues/9)), on 2026-11-22.
+
+**A missing reading leaves out its needle.** A sensor that is missing, `unavailable`,
+`unknown` or not a number shows "—" for its reading. Its needle is left out, and with it
+the crossing and the comfort level: without both needles there is no crossing to show.
+Daan agreed.
+
+**Readings as Home Assistant formats them.** The readings use `hass.formatEntityState`, so
+they follow the sensor's display precision, the user's locale and Home Assistant's own
+spacing before units.
+
+**Scale options are checked against the sensor's unit.** The temperature defaults depend
+on the sensor's unit, which the card only learns from `hass`. The card editor therefore
+checks only the keys that are set. If the defaults then fill in a scale out of order, such
+as `comfortable_min: 26` against the default 24 °C maximum, the card shows the error,
+naming the option, in place of the dial.
+
+**The dial keeps the thermostat's size.** On a wide card the readings and the dial stay at
+most 344px wide, centred, as the thermostat card's dial does. In the sections view the card
+starts half a section wide and as tall as the dial needs.
+
 ## The prototype's verdict
 
-The prototype in `prototype/dial/` ran ten rounds next to a thermostat-card stand-in, in
-light and dark. Daan chose **variant F** for the first release on 2026-11-22. Two other
-variants stay as references for the build. **G** shows `show_comfort_limits` turned on.
-**A** is the zone-colour debugging view. The decisions above describe F. The
-prototype's code is throwaway: the build rewrites it in `src/` with tests for the
-geometry, then deletes `prototype/dial/`.
+The prototype ran ten rounds next to a thermostat-card stand-in, in light and dark. Daan
+chose **variant F** for the first release on 2026-11-22. **G** showed
+`show_comfort_limits` turned on, and **A** the zone-colour debugging view. The decisions
+above describe F. The build rewrote it in `src/` with tests for the geometry and deleted
+the prototype; it is in git history at `b1cbd56` (`prototype/dial/`). The preview page
+(`pnpm run preview`) keeps the thermostat stand-in for checking changes.
 
-## Leads
+## HACS as the Marketplace
 
-- Home Assistant 2026.11 moved HACS into Home Assistant as a built-in Marketplace
-  ([release notes](https://www.home-assistant.io/blog/2026/11/04/release-202611/)). Check
-  whether `hacs.json` and the Release workflow still apply as they are before the first
-  release.
+Home Assistant 2026.11 built HACS in as the Marketplace, under Settings → Marketplace, and
+the separate HACS installer stops at that release
+([release notes](https://www.home-assistant.io/blog/2026/11/04/release-202611/)). A custom
+repository still needs to be a public GitHub repository with a `hacs.json`
+([Marketplace documentation](https://www.home-assistant.io/integrations/marketplace/)), so
+`hacs.json` and the Release workflow stay as they are. Dashboard resources are now served
+from `/local/community/` rather than `/hacsfiles/`. Neither page says where the
+Marketplace reads the minimum Home Assistant version from; `hacs.json`'s `homeassistant`
+key is HACS's way, and is kept until the Marketplace says otherwise. Read on 2026-11-22.

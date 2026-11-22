@@ -18,6 +18,7 @@ You need Node 24 and pnpm (`npm install -g pnpm`, or Corepack).
 pnpm install
 pnpm run build      # dist/comfortmeter-card.js
 pnpm run dev        # rebuilds on every change
+pnpm run preview    # the card next to a thermostat stand-in, light and dark, on localhost:5181
 pnpm test           # Vitest
 pnpm run lint       # ESLint, Prettier, TypeScript and the Lit template check
 pnpm run format     # fix what ESLint and Prettier can fix

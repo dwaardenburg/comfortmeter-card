@@ -158,6 +158,8 @@ interface Scenario {
   humidity: string;
   unit?: string;
   options?: Record<string, unknown>;
+  /** Shown as a full-width card in the sections view. */
+  wide?: boolean;
 }
 
 const scenarios: Scenario[] = [
@@ -181,6 +183,7 @@ const scenarios: Scenario[] = [
       humidity: { comfortable_max: 65 },
     },
   },
+  { label: "a wide card", temperature: "22.8", humidity: "57", wide: true },
   {
     label: "show_comfort_limits",
     temperature: "21.5",
@@ -227,6 +230,7 @@ function render() {
     for (const scenario of scenarios) {
       const cell = document.createElement("div");
       cell.className = "cell";
+      if (scenario.wide) cell.style.width = "540px";
       const card = document.createElement("comfortmeter-card") as CardElement;
       card.setConfig({
         type: "custom:comfortmeter-card",

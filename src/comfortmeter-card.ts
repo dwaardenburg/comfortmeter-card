@@ -1,7 +1,12 @@
 import { LitElement, css, html, nothing, svg } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { comfortLevel, zoneColour, zoneOf } from "./comfort";
-import { parseConfig, scalesFor, type ComfortmeterCardConfig } from "./config";
+import {
+  parseConfig,
+  scalesFor,
+  stubConfig,
+  type ComfortmeterCardConfig,
+} from "./config";
 import {
   humidityScalePath,
   layoutDial,
@@ -28,8 +33,19 @@ export class ComfortmeterCard extends LitElement {
     this._config = parseConfig(config);
   }
 
+  /** The masonry view's height, in rows of about 50px. */
   public getCardSize(): number {
-    return 3;
+    return 6;
+  }
+
+  /** The sections view's size: half a section wide, as tall as the dial needs. */
+  public getGridOptions() {
+    return { columns: 6, rows: "auto", min_columns: 4 };
+  }
+
+  /** The card picker's first configuration: the first temperature and humidity sensors. */
+  public static getStubConfig(hass: HomeAssistant) {
+    return stubConfig(hass.states);
   }
 
   protected render() {
@@ -76,47 +92,49 @@ export class ComfortmeterCard extends LitElement {
             ? html`<div class="name">${this._config.name}</div>`
             : nothing
         }
-        <div class="readings">
-          <div class="reading humidity">
-            ${icon(mdiWaterPercent)}<span>${shown(humidity)}</span>
+        <div class="face">
+          <div class="readings">
+            <div class="reading humidity">
+              ${icon(mdiWaterPercent)}<span>${shown(humidity)}</span>
+            </div>
+            <div class="reading temperature">
+              ${icon(mdiThermometer)}<span>${shown(temperature)}</span>
+            </div>
           </div>
-          <div class="reading temperature">
-            ${icon(mdiThermometer)}<span>${shown(temperature)}</span>
-          </div>
-        </div>
-        <svg
-          class="dial"
-          viewBox="0 30 320 296"
-          role="img"
-          aria-label=${level ?? "Comfortmeter"}
-        >
-          <g class="scales">
-            <path class="scale" d=${temperatureScalePath()} />
-            <path class="scale" d=${humidityScalePath()} />
-          </g>
-          ${dial.bandLines.map(
-            ({ pivot, end }) =>
-              svg`<line class="band-line" x1=${pivot[0]} y1=${pivot[1]} x2=${end[0]} y2=${end[1]} />`
-          )}
-          ${dial.comfortLimits.map(
-            ({ value, at }) =>
-              svg`<text class="comfort-limit" x=${at[0]} y=${at[1]}>${value}</text>`
-          )}
-          <path class="comfort-zone" d=${polygonPath(dial.comfortZone)} />
-          ${needles(dial.temperatureNeedle, dial.humidityNeedle)}
-          ${
-            dial.crossing && zone
-              ? svg`<circle class="crossing-ring" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="7" />
+          <svg
+            class="dial"
+            viewBox="0 30 320 296"
+            role="img"
+            aria-label=${level ?? "Comfortmeter"}
+          >
+            <g class="scales">
+              <path class="scale" d=${temperatureScalePath()} />
+              <path class="scale" d=${humidityScalePath()} />
+            </g>
+            ${dial.bandLines.map(
+              ({ pivot, end }) =>
+                svg`<line class="band-line" x1=${pivot[0]} y1=${pivot[1]} x2=${end[0]} y2=${end[1]} />`
+            )}
+            ${dial.comfortLimits.map(
+              ({ value, at }) =>
+                svg`<text class="comfort-limit" x=${at[0]} y=${at[1]}>${value}</text>`
+            )}
+            <path class="comfort-zone" d=${polygonPath(dial.comfortZone)} />
+            ${needles(dial.temperatureNeedle, dial.humidityNeedle)}
+            ${
+              dial.crossing && zone
+                ? svg`<circle class="crossing-ring" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="7" />
                 <circle class="crossing" cx=${dial.crossing[0]} cy=${dial.crossing[1]} r="6"
                   style=${`fill: ${zoneColour(zone)}`} />`
-              : nothing
-          }
-          ${
-            level
-              ? svg`<text class="comfort-level" x="160" y="316">${level}</text>`
-              : nothing
-          }
-        </svg>
+                : nothing
+            }
+            ${
+              level
+                ? svg`<text class="comfort-level" x="160" y="316">${level}</text>`
+                : nothing
+            }
+          </svg>
+        </div>
       </ha-card>
     `;
   }
@@ -131,8 +149,10 @@ export class ComfortmeterCard extends LitElement {
         var(--card-background-color, white)
       );
     }
-    ha-card {
-      position: relative;
+    /* The readings and the dial keep the thermostat dial's size on a wide card. */
+    .face {
+      max-width: 344px;
+      margin: 0 auto;
     }
     /* The room name on one line, as on the thermostat card. */
     .name {

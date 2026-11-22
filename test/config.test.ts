@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseConfig, scalesFor } from "../src/config";
+import { parseConfig, scalesFor, stubConfig } from "../src/config";
 import { defaultScales } from "../src/dial";
 
 describe("parseConfig", () => {
@@ -123,5 +123,40 @@ describe("scalesFor", () => {
     expect(() => scalesFor(config, "°C")).toThrow(
       "temperature.comfortable_min"
     );
+  });
+});
+
+describe("stubConfig", () => {
+  const sensor = (device_class?: string) => ({
+    state: "1",
+    attributes: device_class ? { device_class } : {},
+  });
+
+  it("picks the first temperature and humidity sensors", () => {
+    expect(
+      stubConfig({
+        "light.hall": sensor(),
+        "sensor.power": sensor("power"),
+        "sensor.hall_temperature": sensor("temperature"),
+        "sensor.hall_humidity": sensor("humidity"),
+        "sensor.attic_temperature": sensor("temperature"),
+      })
+    ).toEqual({
+      temperature_entity: "sensor.hall_temperature",
+      humidity_entity: "sensor.hall_humidity",
+    });
+  });
+
+  it("falls back to example entities that the editor flags as missing", () => {
+    expect(stubConfig({})).toEqual({
+      temperature_entity: "sensor.temperature",
+      humidity_entity: "sensor.humidity",
+    });
+  });
+
+  it("gives a configuration that parses", () => {
+    expect(() =>
+      parseConfig({ type: "custom:comfortmeter-card", ...stubConfig({}) })
+    ).not.toThrow();
   });
 });
