@@ -221,7 +221,12 @@ Taps follow the scales, not the needles, which cross the middle: the temperature
 pivot lies in the humidity half. The halves look like the entity card, whose whole
 card is a button: a pointer, no hover or pressed tint (the tile card's tint was tried and
 left out, as it isn't part of the thermostat's design), and a 1px focus ring, in
-`--primary-color` since the card has no state colour. A sensor
+`--primary-color` since the card has no state colour. The halves stop 4px short of the
+middle, leaving 8px between them, Home Assistant's space between two cards, so a tap on
+the centre line opens nothing rather than a guess. Only the tap targets have the gap: a
+prototype that split the card's surface as well, with and without cutting the dial, was
+turned down on 2026-11-23, as the dial reads as one instrument and the card looked right
+whole. A sensor
 that is missing or unavailable still opens its dialog. A `tap_action` option can come later
 without breaking anything.
 

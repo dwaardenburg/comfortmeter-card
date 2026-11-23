@@ -230,12 +230,14 @@ export class ComfortmeterCard extends LitElement {
       position: relative;
     }
     /* Each half of the card is a button for its sensor, as the entity card is: a pointer,
-       no hover or pressed tint, and a 1px focus ring for the keyboard. */
+       no hover or pressed tint, and a 1px focus ring for the keyboard. The halves stop
+       4px short of the middle: the 8px between them, Home Assistant's space between two
+       cards, opens nothing, so a tap on the centre line isn't a guess. */
     .half {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 50%;
+      width: calc(50% - 4px);
       z-index: 2;
       margin: 0;
       padding: 0;
