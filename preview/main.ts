@@ -204,4 +204,11 @@ function render() {
   }
 }
 
+/** Home Assistant would open a more-info dialog here; the page names the entity instead. */
+document.addEventListener("hass-more-info", (event) => {
+  const { entityId } = (event as CustomEvent<{ entityId: string }>).detail;
+  const shown = document.querySelector("#more-info");
+  if (shown) shown.textContent = `hass-more-info: ${entityId}`;
+});
+
 customElements.whenDefined("comfortmeter-card").then(render);

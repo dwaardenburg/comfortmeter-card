@@ -117,7 +117,8 @@ that line too. Without a name the readings keep the line. When the whole name do
 between them, the readings move down a line into the empty corners beside the apex, in
 front of the dial, without making the card taller: the name and the dial keep their
 places. Only when the two readings don't fit side by side does the card grow, with each
-reading on a line of its own, centred under the name. The card measures the
+reading on a line of its own under the name, the humidity at the left and the temperature
+at the right, so each stays on its half of the card (see the tap below). The card measures the
 name and the readings to choose, so the readings stay beside any name that fits
 (`src/header.ts`). Until
 [#12](https://github.com/dwaardenburg/comfortmeter-card/issues/12) the readings sat a line
@@ -210,6 +211,19 @@ dial drew about 155px wide and the comfort level under it shrank to 5-6px. Movin
 out of the SVG was the other option; the full-width default was chosen because it also
 matches the thermostat card above or below it. At half a section the comfort level is
 still small.
+
+**A tap opens the sensor on its half.** Home Assistant's more-info dialog shows one entity,
+so the card is split down the middle into two transparent buttons
+([#15](https://github.com/dwaardenburg/comfortmeter-card/issues/15)): the left half, with
+the humidity reading and the humidity scale, opens the humidity sensor; the right half the
+temperature sensor. Large targets were preferred over tapping only the small readings.
+Taps follow the scales, not the needles, which cross the middle: the temperature needle's
+pivot lies in the humidity half. The halves look like the entity card, whose whole
+card is a button: a pointer, no hover or pressed tint (the tile card's tint was tried and
+left out, as it isn't part of the thermostat's design), and a 1px focus ring, in
+`--primary-color` since the card has no state colour. A sensor
+that is missing or unavailable still opens its dialog. A `tap_action` option can come later
+without breaking anything.
 
 ## The prototype's verdict
 

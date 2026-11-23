@@ -151,3 +151,62 @@ describe("the card", () => {
     ).toEqual(["19", "24", "40", "60"]);
   });
 });
+
+describe("tapping the card", () => {
+  /** The entity ids of the more-info dialogs the card asks Home Assistant to open. */
+  function opened(): string[] {
+    const ids: string[] = [];
+    document.addEventListener("hass-more-info", (event) => {
+      ids.push((event as CustomEvent<{ entityId: string }>).detail.entityId);
+    });
+    return ids;
+  }
+
+  function half(root: ShadowRoot, scale: string): HTMLButtonElement {
+    return defined(root.querySelector<HTMLButtonElement>(`.half.${scale}`));
+  }
+
+  it("opens the humidity sensor from the left half and the temperature sensor from the right", async () => {
+    const ids = opened();
+    const root = await mount(hassWith("21.5", "48"));
+    half(root, "humidity").click();
+    half(root, "temperature").click();
+    expect(ids).toEqual(["sensor.room_humidity", "sensor.room_temperature"]);
+  });
+
+  it("opens a sensor Home Assistant doesn't know", async () => {
+    const ids = opened();
+    const hass = hassWith("21.5", "48");
+    delete hass.states["sensor.room_humidity"];
+    const root = await mount(hass);
+    half(root, "humidity").click();
+    expect(ids).toEqual(["sensor.room_humidity"]);
+  });
+
+  it("opens a sensor that is unavailable", async () => {
+    const ids = opened();
+    const root = await mount(hassWith("unavailable", "48"));
+    half(root, "temperature").click();
+    expect(ids).toEqual(["sensor.room_temperature"]);
+  });
+
+  it("labels each half with the sensor it opens", async () => {
+    const hass = hassWith("21.5", "48");
+    defined(hass.states["sensor.room_temperature"]).attributes.friendly_name =
+      "Living room temperature";
+    const root = await mount(hass);
+    expect(half(root, "temperature").getAttribute("aria-label")).toBe(
+      "Open Living room temperature"
+    );
+    expect(half(root, "humidity").getAttribute("aria-label")).toBe(
+      "Open sensor.room_humidity"
+    );
+  });
+
+  it("has nothing to tap when the configuration is at odds", async () => {
+    const root = await mount(hassWith("21.5", "48"), {
+      temperature: { comfortable_min: 68 },
+    });
+    expect(root.querySelector(".half")).toBeNull();
+  });
+});

@@ -18,7 +18,11 @@ import {
 } from "./dial";
 import { configForm } from "./editor";
 import { headerLayout, type HeaderLayout } from "./header";
-import type { HassEntity, HomeAssistant } from "./home-assistant";
+import {
+  moreInfo,
+  type HassEntity,
+  type HomeAssistant,
+} from "./home-assistant";
 import { icon, mdiThermometer, mdiWaterPercent } from "./icons";
 import { readingOf, shownReading } from "./reading";
 
@@ -188,8 +192,28 @@ export class ComfortmeterCard extends LitElement {
             }
           </svg>
         </div>
+        ${this._half("humidity", this._config.humidity_entity, humidity)}
+        ${this._half("temperature", this._config.temperature_entity, temperature)}
       </ha-card>
     `;
+  }
+
+  /**
+   * A transparent button over the half of the card on its scale's side, which opens the
+   * sensor's more-info dialog: the left half humidity, the right half temperature.
+   */
+  private _half(
+    side: keyof Scales,
+    entityId: string,
+    entity: HassEntity | undefined
+  ) {
+    const name = entity?.attributes.friendly_name;
+    return html`<button
+      class="half ${side}"
+      aria-label=${`Open ${typeof name === "string" ? name : entityId}`}
+      @click=${(event: Event) =>
+        moreInfo(event.currentTarget as Element, entityId)}
+    ></button>`;
   }
 
   static styles = css`
@@ -201,6 +225,38 @@ export class ComfortmeterCard extends LitElement {
         var(--primary-text-color) 75%,
         var(--card-background-color, white)
       );
+    }
+    ha-card {
+      position: relative;
+    }
+    /* Each half of the card is a button for its sensor, as the entity card is: a pointer,
+       no hover or pressed tint, and a 1px focus ring for the keyboard. */
+    .half {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 2;
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .half.humidity {
+      left: 0;
+      border-radius: var(--ha-card-border-radius, 12px) 0 0
+        var(--ha-card-border-radius, 12px);
+    }
+    .half.temperature {
+      right: 0;
+      border-radius: 0 var(--ha-card-border-radius, 12px)
+        var(--ha-card-border-radius, 12px) 0;
+    }
+    .half:focus-visible {
+      box-shadow: inset 0 0 0 1px var(--primary-color);
     }
     /* The header and the dial keep the thermostat dial's size on a wide card. */
     .face {
@@ -258,6 +314,8 @@ export class ComfortmeterCard extends LitElement {
       font-size: 14px;
       color: var(--secondary-text-color);
     }
+    /* Each reading keeps its end of the line in every layout, so it stays on its own
+       half of the card, the half a tap on it opens. */
     .reading.humidity {
       grid-area: humidity;
       justify-self: start;
@@ -265,10 +323,6 @@ export class ComfortmeterCard extends LitElement {
     .reading.temperature {
       grid-area: temperature;
       justify-self: end;
-    }
-    .narrow .reading.humidity,
-    .narrow .reading.temperature {
-      justify-self: center;
     }
     .icon {
       width: 16px;

@@ -24,4 +24,6 @@ changes are listed under **Breaking changes**.
   both reporting, where there is one.
 - A visual editor: pick the sensors from those with the right device class, set the name,
   and open each scale's options when you want to change them.
+- Tap the left half of the card to open the humidity sensor's details and history, the
+  right half for the temperature sensor's.
 - Requires Home Assistant 2026.11 or later.

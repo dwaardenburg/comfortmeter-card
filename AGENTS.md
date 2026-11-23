@@ -19,7 +19,8 @@ development: versions stay below 1.0 and options may still change.
 - `src/comfortmeter-card.ts`: the custom element and the card registration.
 - `src/config.ts`: the card's YAML options and their validation.
 - `src/home-assistant.ts`: the slice of Home Assistant's `hass` object the card reads.
-  Home Assistant does not publish frontend types, so declare only what is used.
+  Home Assistant does not publish frontend types, so declare only what is used. It also
+  holds `moreInfo()`, the event that asks Home Assistant to open an entity's dialog.
 - `test/`: Vitest. Geometry and config logic are tested here as plain functions; keep
   them out of the element so they can be.
 - `preview/`: the preview page (`pnpm run preview`, http://localhost:5181), the card

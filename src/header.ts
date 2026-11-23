@@ -2,7 +2,7 @@
  * How the header lays out the room name and the readings for the room it has:
  * - `inline`: the readings at the ends of the name's line;
  * - `stacked`: the name on its own line, the readings on the line below, at its ends;
- * - `narrow`: the name, then each reading on a line of its own, centred.
+ * - `narrow`: the name, then each reading on a line of its own at its end.
  */
 export type HeaderLayout = "inline" | "stacked" | "narrow";
 
@@ -20,7 +20,7 @@ export interface HeaderWidths {
 
 /**
  * The readings stay beside the name while the whole name fits between them, move down a
- * line when it doesn't, and are centred one per line when they don't fit side by side.
+ * line when it doesn't, and take a line each when they don't fit side by side.
  */
 export function headerLayout(widths: HeaderWidths): HeaderLayout {
   const { available, name, humidity, temperature, gap } = widths;

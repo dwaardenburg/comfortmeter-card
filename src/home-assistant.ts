@@ -26,3 +26,18 @@ export interface HomeAssistant {
    */
   formatEntityState(entity: HassEntity, state?: string): string;
 }
+
+/**
+ * Ask Home Assistant to open an entity's more-info dialog, as its own cards do on a tap.
+ * The event crosses shadow roots up to the frontend, which opens the dialog; an entity it
+ * doesn't know still gets one.
+ */
+export function moreInfo(from: Element, entityId: string): void {
+  from.dispatchEvent(
+    new CustomEvent("hass-more-info", {
+      detail: { entityId },
+      bubbles: true,
+      composed: true,
+    })
+  );
+}

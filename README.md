@@ -43,6 +43,9 @@ say the same, such as "Too warm and humid".
 
 A sensor that is unavailable shows "—", and its needle is left out until it reports again.
 
+Tap the left half of the card to open the humidity sensor's details and history, and the
+right half for the temperature sensor's, each on the side of its reading and scale.
+
 ### Options
 
 | Option                | Default    | What it does                                        |
