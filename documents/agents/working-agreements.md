@@ -46,3 +46,11 @@ item touches nothing else. (from `home-assistant`, 2026-09-02)
 variations that don't affect each other, such as an unavailable sensor, a long name and a
 narrow width, rather than a card each. Split a case out only when a card looks off and
 the cause needs isolating. (2026-11-22)
+
+## Browsers
+
+**Ask before looking outside the conversation.** Ask Daan before opening a browser on
+anything the session didn't start itself, such as a Home Assistant dashboard after a
+deploy, also when the other browser is unavailable: Daan may prefer to look in person.
+Pages the session launched itself, such as the preview page or a prototype on
+localhost, need no asking. (2026-11-23)
